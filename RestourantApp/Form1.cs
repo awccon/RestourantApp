@@ -30,8 +30,7 @@ namespace RestourantApp
             var quantityText = textQuantity.Text;
             if (Int32.TryParse(quantityText, out orderQuantity))
             {
-
-                if (orderQuantity != 0 && orderQuantity > 0)
+                if (orderQuantity > 0)
                 {
                     newObj = employee.NewRequest(orderQuantity, menuValue);
                     string? inspectResult = employee.Inspect(newObj);
@@ -39,13 +38,17 @@ namespace RestourantApp
                 }
                 else txtResult.Text = "Error: Order quantity is invalid, you entered zero or negative number of quantity. Please enter a correct number";
             }
+            else
+            { 
+                MessageBox.Show("Please enter correct quantity!");
+            }
         }
 
         private void copyButton_Click(object sender, EventArgs e) // This is a copy previous button
         {
             try
             {
-                employee.CopyRequest();
+                newObj = employee.CopyRequest();
             }
             catch (Exception ex)
             {
@@ -64,7 +67,7 @@ namespace RestourantApp
         private void _formReset()  // This method used to reset a forms
         {
             lblEggQuality.Text = "0";
-            textQuantity.Text = "";
+            textQuantity.Text = "0";
             radioChicken.Checked = true;
         }
     }

@@ -23,9 +23,12 @@ namespace RestourantApp.Classes
             return _quantity;
         }
 
+        //1: 55, 2: null, 3: 45, 4: null, 
+
         // Nullable Method returns int value and also sometimes Null
         public int? GetQuality()
         {
+            //CR: quality of the egg should be specific to an instance. It shouldn't renew ever =y time I call the method. It should be different when I create a new EggOrder class.
             _checkQualityCount++;
             if (_checkQualityCount % 2 == 0)
             {

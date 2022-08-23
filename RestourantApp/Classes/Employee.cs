@@ -6,6 +6,16 @@ using System.Threading.Tasks;
 
 namespace RestourantApp.Classes
 {
+
+    /*
+1. When I make a new order by pressing New Request, I should not be able to make another request or copy request before I prepare the ordered food.
+2. Once you order any food and prepare it, then without making another request, you can Prepare the food again. It should not let you do that. It should tell to order again.
+3. When I leave the quantity box empty, and press Submit, it does nothing. It should tell me to enter quantity. 
+4. When copying the previous order, and if it's the third time, then it should mix my order. It should make chicken if egg was ordered, or wise versa. 
+5. 
+
+ */
+
     internal class Employee
     {
         private object? _lastRequest; // This used for Copy
@@ -14,7 +24,7 @@ namespace RestourantApp.Classes
         //This func returns obj, this is correct I checked twise
         public object NewRequest(int quantity, string menuItem)
         {
-
+            //CR: You need to handle the problem of ordering multiple times in a row.
             _requestCallCount++; // Function call counter
             if (_requestCallCount % 3 == 0) // This will reverse and return value every third session
             {
@@ -56,10 +66,10 @@ namespace RestourantApp.Classes
             return NewRequest(quantity, menuItem);
         }
 
-
         // Inspect will check an Egg, is it rotten or not it will return a string ether null
         public string? Inspect(object obj)
         {
+            //We show the egg quality whether it is rotten or not. You need to show if the egg is rotten in the result box.  
             if (obj is EggOrder eggOrder)
             {
                 int? quality = eggOrder.GetQuality();
@@ -72,19 +82,20 @@ namespace RestourantApp.Classes
                 {
                     return "The Egg is rotten and you can't use it to cook";
                 }
-                else return Convert.ToString(quality);
+                else return quality.ToString();
             }
             else return "No Inspection required";
         }
 
-
         // 
         public string PrepareFood(object obj)
         {
+            //You need to check to see if the obj is null. if so tell the user that there is no order. then check for Egg or Chicken
+
             // Preparing an Egg
-            if (obj is EggOrder eggOrder)
+            if (obj is EggOrder eggOrder) // F9 breakpoint kuyish, F10 step over, F11 step in, Shift + F11 step out 
             {
-                for (int i = 0; i <= eggOrder.GetQuantity(); i++)
+                for (int i = 0; i < eggOrder.GetQuantity(); i++)
                 {
                     try
                     {
@@ -92,23 +103,22 @@ namespace RestourantApp.Classes
                     }
                     catch (Exception ex)
                     {
+                        //Even if you have rotten eggs, it should still keep on cracking other eggs. It should not leave the method. 
                         return ex.Message;
                     }
                     finally
                     {
                         eggOrder.DiscardShell();
                     }
-
                 }
                 eggOrder.Cook();
                 return $"Cook Egg has been finished \n" +
 
                     $"Quantity of Egg is {eggOrder.GetQuantity()}";
             }
-            // This process of prepare a Chicken and cook it
             else if (obj is ChickenOrder chickenOrder)
             {
-                for (int i = 0; i <= chickenOrder.GetQuantity(); i++)
+                for (int i = 0; i < chickenOrder.GetQuantity(); i++)
                 {
                     chickenOrder.CutUp();
                 }
