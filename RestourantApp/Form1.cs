@@ -42,6 +42,7 @@ namespace RestourantApp
             { 
                 MessageBox.Show("Please enter correct quantity!");
             }
+            textQuantity.Text = "0";
         }
 
         private void copyButton_Click(object sender, EventArgs e) // This is a copy previous button

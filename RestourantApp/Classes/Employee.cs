@@ -91,7 +91,8 @@ namespace RestourantApp.Classes
         public string PrepareFood(object obj)
         {
             //You need to check to see if the obj is null. if so tell the user that there is no order. then check for Egg or Chicken
-            
+            _lastRequest = obj; // Last order need for Copy previous order
+
             // Preparing an Egg
             if (obj != null && (obj is EggOrder eggOrder)) // F9 breakpoint kuyish, F10 step over, F11 step in, Shift + F11 step out 
             {
@@ -128,7 +129,6 @@ namespace RestourantApp.Classes
                     $"Quantity of Chicken is {chickenOrder.GetQuantity()}";
             }
             else return "You didn't choose any item";
-            _lastRequest = obj; // Last order need for Copy previous order
 
         }
     }
