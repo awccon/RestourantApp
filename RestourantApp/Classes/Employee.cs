@@ -20,6 +20,7 @@ namespace RestourantApp.Classes
     {
         private object? _lastRequest; // This used for Copy
         private int _requestCallCount;
+        
 
         //This func returns obj, this is correct I checked twise
         public object NewRequest(int quantity, string menuItem)
@@ -39,7 +40,6 @@ namespace RestourantApp.Classes
             {
                 newOrder = new EggOrder(quantity);
             }
-            _lastRequest = newOrder; // Last order need for Copy previous order
             return newOrder;
         }
 
@@ -91,9 +91,9 @@ namespace RestourantApp.Classes
         public string PrepareFood(object obj)
         {
             //You need to check to see if the obj is null. if so tell the user that there is no order. then check for Egg or Chicken
-
+            
             // Preparing an Egg
-            if (obj is EggOrder eggOrder) // F9 breakpoint kuyish, F10 step over, F11 step in, Shift + F11 step out 
+            if (obj != null && (obj is EggOrder eggOrder)) // F9 breakpoint kuyish, F10 step over, F11 step in, Shift + F11 step out 
             {
                 for (int i = 0; i < eggOrder.GetQuantity(); i++)
                 {
@@ -116,7 +116,7 @@ namespace RestourantApp.Classes
 
                     $"Quantity of Egg is {eggOrder.GetQuantity()}";
             }
-            else if (obj is ChickenOrder chickenOrder)
+            else if (obj != null && (obj is ChickenOrder chickenOrder))
             {
                 for (int i = 0; i < chickenOrder.GetQuantity(); i++)
                 {
@@ -128,6 +128,8 @@ namespace RestourantApp.Classes
                     $"Quantity of Chicken is {chickenOrder.GetQuantity()}";
             }
             else return "You didn't choose any item";
+            _lastRequest = obj; // Last order need for Copy previous order
+
         }
     }
 }

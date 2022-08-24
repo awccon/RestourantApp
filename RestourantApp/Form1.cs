@@ -52,8 +52,7 @@ namespace RestourantApp
             }
             catch (Exception ex)
             {
-                txtResult.Text = "";
-                txtResult.Text += Environment.NewLine + ex.Message;
+                txtResult.Text = ex.Message;
             }
         }
 
@@ -68,7 +67,6 @@ namespace RestourantApp
         {
             lblEggQuality.Text = "0";
             textQuantity.Text = "0";
-            radioChicken.Checked = true;
         }
     }
 }
