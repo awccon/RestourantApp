@@ -8,17 +8,15 @@ namespace RestourantApp
             InitializeComponent();
         }
 
-         // This is to get a value of menu item or checkbox
         object newObj;
-
-        Employee employee = new Employee(); // This class was declare to use a main methods
+        Employee employee = new Employee();
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void submitButton_Click(object sender, EventArgs e) // This is a New Request button
+        private void submitButton_Click(object sender, EventArgs e)
         {
             string menuValue = "Chicken";
             if (radioEgg.Checked)
@@ -40,14 +38,14 @@ namespace RestourantApp
                 submitButton.Enabled = false;
             }
             else
-            { 
+            {
                 MessageBox.Show("Please enter correct quantity!");
             }
             textQuantity.Text = "";
             txtResult.Text = $"You choise {orderQuantity} {menuValue}";
         }
 
-        private void copyButton_Click(object sender, EventArgs e) // This is a copy previous button
+        private void copyButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -71,21 +69,21 @@ namespace RestourantApp
             {
                 txtResult.Text = ex.Message;
             }
-            
+
         }
 
         private void prepareButton_Click(object sender, EventArgs e)
         {
-            txtResult.Text = employee.PrepareFood(newObj); // This is a final button to prepare a food
+            txtResult.Text = employee.PrepareFood(newObj);
             _formReset();
         }
 
-
-        private void _formReset()  // This method used to reset a forms
+        // This method reset a forms inputs
+        private void _formReset()
         {
             lblEggQuality.Text = "0";
             textQuantity.Text = "";
-            submitButton.Enabled=true;
+            submitButton.Enabled = true;
         }
     }
 }
