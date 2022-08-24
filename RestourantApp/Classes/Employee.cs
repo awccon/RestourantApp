@@ -80,7 +80,7 @@ namespace RestourantApp.Classes
                 }
                 else if (quality != null && quality <= 25)
                 {
-                    return "The Egg is rotten and you can't use it to cook";
+                    return $"Quality of egg is: {quality}";
                 }
                 else return quality.ToString();
             }
@@ -105,10 +105,10 @@ namespace RestourantApp.Classes
                     catch (Exception ex)
                     {
                         //Even if you have rotten eggs, it should still keep on cracking other eggs. It should not leave the method. 
-                        return ex.Message;
                     }
                     finally
                     {
+
                         eggOrder.DiscardShell();
                     }
                 }
