@@ -24,25 +24,32 @@ namespace RestourantApp
                 menuValue = "Egg";
             }
 
-            int orderQuantity = 0;
+            int orderQuantity;
             var quantityText = textQuantity.Text;
             if (Int32.TryParse(quantityText, out orderQuantity) && orderQuantity != 0)
             {
-                if (orderQuantity > 0)
-                {
-                    newObj = employee.NewRequest(orderQuantity, menuValue);
+                
+                 if (orderQuantity > 0)
+                 {
+                    try
+                    {
+                        newObj = employee.NewRequest(orderQuantity, menuValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        txtResult.Text = ex.Message;
+                    } 
                     string? inspectResult = employee.Inspect(newObj);
                     lblEggQuality.Text = inspectResult;
-                }
-                else txtResult.Text = "Error: Order quantity is invalid, you entered zero or negative number of quantity. Please enter a correct number";
-                submitButton.Enabled = false;
-            }
+                    
+                 }
+                 else txtResult.Text = "Error: Order quantity is invalid, you entered zero or negative number of quantity. Please enter a correct number";
+           }
             else
             {
                 MessageBox.Show("Please enter correct quantity!");
             }
             textQuantity.Text = "";
-            txtResult.Text = $"You choise {orderQuantity} {menuValue}";
         }
 
         private void copyButton_Click(object sender, EventArgs e)
@@ -50,20 +57,6 @@ namespace RestourantApp
             try
             {
                 newObj = employee.CopyRequest();
-
-                if (newObj != null && (newObj is ChickenOrder chicken))
-                {
-                    lblEggQuality.Text = "No inspection requared";
-                    txtResult.Text = "Precious order copied";
-                    txtResult.Text += Environment.NewLine + $"Previous order is {chicken.GetQuantity()} Chicken";
-                }
-                else
-                {
-                    var egg = newObj as EggOrder;
-                    lblEggQuality.Text = egg.GetQuality().ToString();
-                    txtResult.Text = "Precious order copied";
-                    txtResult.Text += Environment.NewLine + $"Previous order is {egg.GetQuantity()} Egg";
-                }
             }
             catch (Exception ex)
             {
@@ -83,7 +76,6 @@ namespace RestourantApp
         {
             lblEggQuality.Text = "0";
             textQuantity.Text = "";
-            submitButton.Enabled = true;
         }
     }
 }

@@ -12,12 +12,13 @@ namespace RestourantApp.Classes
     internal class EggOrder
     {
         private int _quantity = 0;
-        private int _checkQualityCount = 0;
+        private static int _eggQualityCount = 0;
         private int random = new Random().Next(101);
 
         public EggOrder(int quantity)
         {
             _quantity = quantity;
+            _eggQualityCount++;
         }
 
         /// <summary>
@@ -38,9 +39,8 @@ namespace RestourantApp.Classes
         public int? GetQuality()
         {
             //CR: quality of the egg should be specific to an instance. It shouldn't renew ever =y time I call the method. It should be different when I create a new EggOrder class.
-            _checkQualityCount++;
-            if (_checkQualityCount == 1) { return random; }
-            else return null;
+            if (_eggQualityCount % 2 == 0) { return null; }
+            else return random;
         }
 
         /// <summary>

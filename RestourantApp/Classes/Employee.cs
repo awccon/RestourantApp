@@ -18,6 +18,7 @@ namespace RestourantApp.Classes
     {
         private object? _lastRequest;
         private int _requestCallCount;
+        bool ordered = false;
 
         /// <summary>
         /// Gets order quantity and menuItem
@@ -28,7 +29,13 @@ namespace RestourantApp.Classes
         public object NewRequest(int quantity, string menuItem)
         {
             //CR: You need to handle the problem of ordering multiple times in a row.
+            if (ordered)
+            {
+                throw new Exception("You need to prepare a current order");
+            }
+            ordered = true;
             _requestCallCount++;
+            
             if (_requestCallCount % 3 == 0)
             {
                 menuItem = (menuItem == "Chicken" ? "Egg" : "Chicken");
@@ -42,6 +49,7 @@ namespace RestourantApp.Classes
             {
                 newOrder = new EggOrder(quantity);
             }
+            _lastRequest = newOrder;
             return newOrder;
         }
 
@@ -104,8 +112,7 @@ namespace RestourantApp.Classes
         public string PrepareFood(object obj)
         {
             //You need to check to see if the obj is null. if so tell the user that there is no order. then check for Egg or Chicken
-            _lastRequest = obj;
-
+            string resultMessage;
             if (obj != null && (obj is EggOrder eggOrder))
             {
                 for (int i = 0; i < eggOrder.GetQuantity(); i++)
@@ -116,7 +123,6 @@ namespace RestourantApp.Classes
                     }
                     catch (Exception)
                     {
-                        continue;
                         //Even if you have rotten eggs, it should still keep on cracking other eggs. It should not leave the method. 
                     }
                     finally
@@ -125,7 +131,7 @@ namespace RestourantApp.Classes
                     }
                 }
                 eggOrder.Cook();
-                return $"Cook Egg has been finished \n" +
+                resultMessage = $"Cook Egg has been finished \n" +
                     $"Quantity of Egg is {eggOrder.GetQuantity()}";
             }
             else if (obj != null && (obj is ChickenOrder chickenOrder))
@@ -135,10 +141,12 @@ namespace RestourantApp.Classes
                     chickenOrder.CutUp();
                 }
                 chickenOrder.Cook();
-                return "Cooking Chicken has been finished \n" +
+                resultMessage = "Cooking Chicken has been finished \n" +
                     $"Quantity of Chicken is {chickenOrder.GetQuantity()}";
             }
-            else return "You didn't choose any item";
+            else resultMessage = "You didn't choose any item";
+            ordered = false;
+            return resultMessage;
         }
     }
 }
