@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestourantApp.Classes
+namespace RestaurantApp2.Classes
 {
     /// <summary>
     /// This class is to create Chicken order

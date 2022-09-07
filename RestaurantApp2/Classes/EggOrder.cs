@@ -4,20 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestourantApp.Classes
+namespace RestaurantApp2.Classes
 {
     /// <summary>
     /// This class is to create an Egg order
     /// </summary>
-    internal class EggOrder
+    internal class EggOrder : Order
     {
-        private int _quantity = 0;
         private static int _eggQualityCount = 0;
         private int random = new Random().Next(101);
 
-        public EggOrder(int quantity)
+        public EggOrder(int quantity) : base(quantity)
         {
-            _quantity = quantity;
+            base._quantity = quantity;
             _eggQualityCount++;
         }
 
@@ -25,12 +24,10 @@ namespace RestourantApp.Classes
         /// Get Quantity of Egg
         /// </summary>
         /// <returns>quantity</returns>
-        public int GetQuantity()
+        public override int GetQuantity()
         {
-            return _quantity;
+             return base._quantity;
         }
-
-        //1: 55, 2: null, 3: 45, 4: null, 
 
         /// <summary>
         /// Get quality method
@@ -38,21 +35,15 @@ namespace RestourantApp.Classes
         /// <returns>returns a quality of egg with random number</returns>
         public int? GetQuality()
         {
-            //CR: quality of the egg should be specific to an instance. It shouldn't renew ever =y time I call the method. It should be different when I create a new EggOrder class.
-            if (_eggQualityCount % 2 == 0) { return null; }
-            else return random;
+            return random;
         }
 
         /// <summary>
         /// Crack method
         /// </summary>
-        /// <exception cref="Exception">Checks egg quality and throws an exception</exception>
         public void Crack()
         {
-            if (GetQuality() <= 25)
-            {
-                throw new Exception("The Egg is rotten");
-            }
+
         }
 
         /// <summary>
@@ -66,9 +57,9 @@ namespace RestourantApp.Classes
         /// <summary>
         /// Cook method doesn't return anithing
         /// </summary>
-        public void Cook()
+        public override void Cook()
         {
-
+            // This is reponsible for cook egg
         }
     }
 }
