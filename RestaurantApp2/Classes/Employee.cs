@@ -7,19 +7,8 @@ using System.Threading.Tasks;
 namespace RestaurantApp2.Classes
 {
 
-    /*
-        1. When I make a new order by pressing New Request, I should not be able to make another request or copy request before I prepare the ordered food.
-        2. Once you order any food and prepare it, then without making another request, you can Prepare the food again. It should not let you do that. It should tell to order again.
-        3. When I leave the quantity box empty, and press Submit, it does nothing. It should tell me to enter quantity. 
-        4. When copying the previous order, and if it's the third time, then it should mix my order. It should make chicken if egg was ordered, or wise versa. 
-    */
-
     internal class Employee
     {
-        private object? _lastRequest;
-        private int _requestCallCount;
-        bool ordered = false;
-
         /// <summary>
         /// Gets order quantity and menuItem
         /// </summary>
@@ -28,18 +17,6 @@ namespace RestaurantApp2.Classes
         /// <returns>New instance of order</returns>
         public object NewRequest(int quantity, string menuItem)
         {
-            //CR: You need to handle the problem of ordering multiple times in a row.
-            if (ordered)
-            {
-                throw new Exception("You need to prepare a current order");
-            }
-            ordered = true;
-            _requestCallCount++;
-            
-            if (_requestCallCount % 3 == 0)
-            {
-                menuItem = (menuItem == "Chicken" ? "Egg" : "Chicken");
-            }
             object? newOrder = null;
             if (menuItem == "Chicken")
             {
@@ -49,35 +26,7 @@ namespace RestaurantApp2.Classes
             {
                 newOrder = new EggOrder(quantity);
             }
-            _lastRequest = newOrder;
             return newOrder;
-        }
-
-        /// <summary>
-        /// Copy Request method will check a previous order
-        /// </summary>
-        /// <returns>It will return null or a new instanse of order</returns>
-        /// <exception cref="Exception">If there is no previous order it will stop a method and return a warning message</exception>
-        public object CopyRequest()
-        {
-            if (_lastRequest == null)
-            {
-                throw new Exception("There are no previous requests!");
-            }
-            int quantity;
-            string menuItem;
-            if (_lastRequest is ChickenOrder chickenOrder)
-            {
-                menuItem = "Chicken";
-                quantity = chickenOrder.GetQuantity();
-            }
-            else
-            {
-                var egg = _lastRequest as EggOrder;
-                quantity = egg.GetQuantity();
-                menuItem = "Egg";
-            }
-            return NewRequest(quantity, menuItem);
         }
 
         /// <summary>
@@ -85,21 +34,12 @@ namespace RestaurantApp2.Classes
         /// </summary>
         /// <param name="obj">should be a new instance of order</param>
         /// <returns>result of inspection in string ether null</returns>
-        public string? Inspect(object obj)
+        public string Inspect(object obj)
         {
             if (obj is EggOrder eggOrder)
             {
-                int? quality = eggOrder.GetQuality();
-
-                if (quality == null)
-                {
-                    return "I forgot to check quality";
-                }
-                else if (quality != null && quality <= 25)
-                {
-                    return $"Quality of egg is: {quality}";
-                }
-                else return quality.ToString();
+                int quality = eggOrder.GetQuality();
+                return quality.ToString();
             }
             else return "No Inspection required";
         }
@@ -117,18 +57,8 @@ namespace RestaurantApp2.Classes
             {
                 for (int i = 0; i < eggOrder.GetQuantity(); i++)
                 {
-                    try
-                    {
                         eggOrder.Crack();
-                    }
-                    catch (Exception)
-                    {
-                        //Even if you have rotten eggs, it should still keep on cracking other eggs. It should not leave the method. 
-                    }
-                    finally
-                    {
                         eggOrder.DiscardShell();
-                    }
                 }
                 eggOrder.Cook();
                 resultMessage = $"Cook Egg has been finished \n" +
@@ -145,7 +75,6 @@ namespace RestaurantApp2.Classes
                     $"Quantity of Chicken is {chickenOrder.GetQuantity()}";
             }
             else resultMessage = "You didn't choose any item";
-            ordered = false;
             return resultMessage;
         }
     }

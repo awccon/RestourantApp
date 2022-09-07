@@ -13,10 +13,14 @@ namespace RestaurantApp2.Classes
     {
         private static int _eggQualityCount = 0;
         private int random = new Random().Next(101);
-
+        
+        /// <summary>
+        /// inherited from class Order
+        /// </summary>
+        /// <param name="quantity">Quantity of item</param>
         public EggOrder(int quantity) : base(quantity)
         {
-            base._quantity = quantity;
+            //base.quantity = quantity;
             _eggQualityCount++;
         }
 
@@ -26,14 +30,14 @@ namespace RestaurantApp2.Classes
         /// <returns>quantity</returns>
         public override int GetQuantity()
         {
-             return base._quantity;
+             return base.quantity;
         }
 
         /// <summary>
         /// Get quality method
         /// </summary>
         /// <returns>returns a quality of egg with random number</returns>
-        public int? GetQuality()
+        public int GetQuality()
         {
             return random;
         }

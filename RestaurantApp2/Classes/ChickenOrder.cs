@@ -9,26 +9,25 @@ namespace RestaurantApp2.Classes
     /// <summary>
     /// This class is to create Chicken order
     /// </summary>
-    internal class ChickenOrder
+    internal class ChickenOrder : Order
     {
-        private int _quantity = 0;
 
         /// <summary>
         /// Chicken order it will return quantity of chicken
         /// </summary>
-        /// <param name="quantity">You shoudl pass the quantity of chickens</param>
-        public ChickenOrder(int quantity)
+        /// <param name="quantity">quantity of item</param>
+        public ChickenOrder(int quantity) : base(quantity)
         {
-            _quantity = quantity;
+            //base.quantity = quantity;
         }
 
         /// <summary>
         /// Gets quantity from constructor
         /// </summary>
         /// <returns>quantity type integer</returns>
-        public int GetQuantity()
+        public override int GetQuantity()
         {
-            return _quantity;
+            return base.quantity;
         }
 
         /// <summary>
@@ -42,9 +41,9 @@ namespace RestaurantApp2.Classes
         /// <summary>
         /// Method to cook a chicken
         /// </summary>
-        public void Cook()
+        public override void Cook()
         {
-
+            // This is responsible for cook chicken
         }
     }
 }

@@ -8,16 +8,24 @@ namespace RestaurantApp2.Classes
 {
     internal class Order
     {
-        public int _quantity = 0;
+        public int quantity = 0;
         public Order(int quantity)
         {
-            _quantity = quantity;
-        }
-        public virtual int GetQuantity()
-        {
-            return _quantity;
+            this.quantity = quantity;
         }
 
+        /// <summary>
+        /// gets quantity and returns
+        /// </summary>
+        /// <returns></returns>
+        public virtual int GetQuantity()
+        {
+            return quantity;
+        }
+
+        /// <summary>
+        /// Cook method
+        /// </summary>
         public virtual void Cook()
         {
 
