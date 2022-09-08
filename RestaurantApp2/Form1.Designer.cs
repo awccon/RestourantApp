@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.submitRequest = new System.Windows.Forms.Button();
+            this.submitBtn = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.drinksComBox = new System.Windows.Forms.ComboBox();
             this.textBoxEgg = new System.Windows.Forms.TextBox();
             this.textBoxChicken = new System.Windows.Forms.TextBox();
             this.resultsListBox = new System.Windows.Forms.ListBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.sendBtn = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.eggQualityLb = new System.Windows.Forms.Label();
@@ -46,7 +46,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.submitRequest);
+            this.groupBox1.Controls.Add(this.submitBtn);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.drinksComBox);
@@ -61,15 +61,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Menu";
             // 
-            // submitRequest
+            // submitBtn
             // 
-            this.submitRequest.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.submitRequest.Location = new System.Drawing.Point(91, 129);
-            this.submitRequest.Name = "submitRequest";
-            this.submitRequest.Size = new System.Drawing.Size(323, 28);
-            this.submitRequest.TabIndex = 7;
-            this.submitRequest.Text = "Receive this request from a Customer";
-            this.submitRequest.UseVisualStyleBackColor = true;
+            this.submitBtn.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.submitBtn.Location = new System.Drawing.Point(91, 129);
+            this.submitBtn.Name = "submitBtn";
+            this.submitBtn.Size = new System.Drawing.Size(323, 28);
+            this.submitBtn.TabIndex = 7;
+            this.submitBtn.Text = "Receive this request from a Customer";
+            this.submitBtn.UseVisualStyleBackColor = true;
+            this.submitBtn.Click += new System.EventHandler(this.submitBtn_Click);
             // 
             // label2
             // 
@@ -124,15 +125,16 @@
             this.resultsListBox.Size = new System.Drawing.Size(505, 184);
             this.resultsListBox.TabIndex = 1;
             // 
-            // button2
+            // sendBtn
             // 
-            this.button2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button2.Location = new System.Drawing.Point(130, 245);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(323, 28);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "Send all Customer requests to the Cook";
-            this.button2.UseVisualStyleBackColor = true;
+            this.sendBtn.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.sendBtn.Location = new System.Drawing.Point(130, 245);
+            this.sendBtn.Name = "sendBtn";
+            this.sendBtn.Size = new System.Drawing.Size(323, 28);
+            this.sendBtn.TabIndex = 8;
+            this.sendBtn.Text = "Send all Customer requests to the Cook";
+            this.sendBtn.UseVisualStyleBackColor = true;
+            this.sendBtn.Click += new System.EventHandler(this.sendBtn_Click);
             // 
             // button3
             // 
@@ -180,7 +182,7 @@
             this.Controls.Add(this.eggQualityLb);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.sendBtn);
             this.Controls.Add(this.resultsListBox);
             this.Controls.Add(this.groupBox1);
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -204,8 +206,8 @@
         private ComboBox drinksComBox;
         private TextBox textBoxEgg;
         private TextBox textBoxChicken;
-        private Button submitRequest;
-        private Button button2;
+        private Button submitBtn;
+        private Button sendBtn;
         private Button button3;
         private Label label3;
         private Label eggQualityLb;

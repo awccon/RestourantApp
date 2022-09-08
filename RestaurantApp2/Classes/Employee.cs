@@ -6,27 +6,60 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp2.Classes
 {
+    public enum drinksItem
+    {
+        CocaCola,
+        Pepsi,
+        Water,
+        Fanta,
+        NoDrink
+    }
+
+    public enum menuItem
+    {
+        Chicken,
+        Egg
+    }
 
     internal class Employee
     {
         /// <summary>
+        /// This field for store our data
+        /// </summary>
+        private string[][] customerOrderData = new string[8][];
+        private bool customersOrderWasSend = false;
+
+        /// <summary>
         /// Gets order quantity and menuItem
         /// </summary>
-        /// <param name="quantity">It should be a positive number</param>
-        /// <param name="menuItem">It should be chicken or egg</param>
-        /// <returns>New instance of order</returns>
-        public object NewRequest(int quantity, string menuItem)
+        public void NewRequest(string chicken, string egg, string drinksItem)
         {
-            object? newOrder = null;
-            if (menuItem == "Chicken")
+            if (customersOrderWasSend)
             {
-                newOrder = new ChickenOrder(quantity);
+                throw new Exception("Server already have current orders: you cannot order! please continue to prepare an order");
             }
-            else
+
+            if (chicken != "" && egg != "" && drinksItem != "")
             {
-                newOrder = new EggOrder(quantity);
+                //customerOrderData[][] = 
             }
-            return newOrder;
+
+            //object? newOrder = null;
+
+            //if (menuItem == "Chicken")
+            //{
+            //    newOrder = new ChickenOrder(quantity);
+            //}
+            //else
+            //{
+            //    newOrder = new EggOrder(quantity);
+            //}
+            //return newOrder;
+        }
+
+        public void SendCustomerRequest()
+        {
+            customersOrderWasSend = true;
         }
 
         /// <summary>
@@ -51,14 +84,13 @@ namespace RestaurantApp2.Classes
         /// <returns>Returns a result of cook and prepare</returns>
         public string PrepareFood(object obj)
         {
-            //You need to check to see if the obj is null. if so tell the user that there is no order. then check for Egg or Chicken
             string resultMessage;
             if (obj != null && (obj is EggOrder eggOrder))
             {
                 for (int i = 0; i < eggOrder.GetQuantity(); i++)
                 {
-                        eggOrder.Crack();
-                        eggOrder.DiscardShell();
+                    eggOrder.Crack();
+                    eggOrder.DiscardShell();
                 }
                 eggOrder.Cook();
                 resultMessage = $"Cook Egg has been finished \n" +
@@ -77,5 +109,7 @@ namespace RestaurantApp2.Classes
             else resultMessage = "You didn't choose any item";
             return resultMessage;
         }
+
+
     }
 }
