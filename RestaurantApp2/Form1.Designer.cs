@@ -145,6 +145,7 @@
             this.button3.TabIndex = 9;
             this.button3.Text = "Serve prepared food to the Customers";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label3
             // 

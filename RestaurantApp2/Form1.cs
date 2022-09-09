@@ -8,25 +8,27 @@ namespace RestaurantApp2
             InitializeComponent();
         }
 
-        Employee employee = new Employee();
+        Server server = new Server();
 
         private void Form1_Load(object sender, EventArgs e)
         {
             comboBoxList();
         }
 
-
-
         private void submitBtn_Click(object sender, EventArgs e)
         {
-            try
+            int chickenQuantity, eggQuantity;
+            if ((Int32.TryParse(textBoxChicken.Text, out chickenQuantity) && chickenQuantity != 0) && (Int32.TryParse(textBoxEgg.Text, out eggQuantity) && eggQuantity != 0))
             {
-                employee.NewRequest(textBoxChicken.Text, textBoxEgg.Text, drinksComBox.Text);
-            }
-            catch (Exception ex)
-            {
-                resultsListBox.Items.Clear();
-                resultsListBox.Items.Add(ex.Message);
+                try
+                {
+                    server.SubmitRequest(chickenQuantity, eggQuantity, drinksComBox.Text);
+                }
+                catch (Exception ex)
+                {
+                    resultsListBox.Items.Clear();
+                    resultsListBox.Items.Add(ex.Message);
+                }
             }
         }
 
@@ -35,17 +37,32 @@ namespace RestaurantApp2
         /// </summary>
         private void comboBoxList()
         {
-            drinksComBox.Text = drinksItem.NoDrink.ToString();
-            var drinksList = Enum.GetValues(typeof(drinksItem));
-            foreach (var drinks in drinksList)
+            drinksComBox.SelectedValue = menuItem.NoDrink;
+
+            //drinksComBox.DataSource = Enum.GetNames(typeof(menuItem));
+            var drinksList = Enum.GetNames(typeof(menuItem));
+            for (int i = 0; i < drinksList.Length - 2; i++)
             {
-                drinksComBox.Items.Add(drinks);
+                drinksComBox.Items.Add(drinksList[i]);
             }
+            
         }
 
+        // This button use for send menu items to the cook
         private void sendBtn_Click(object sender, EventArgs e)
         {
-            employee.SendCustomerRequest();
+            server.SendCustomerRequest();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < server.orderStore.Length; i++)
+            {
+                foreach (var order in server.orderStore[i])
+                {
+                    resultsListBox.Items.Add(order);
+                }
+            }
         }
     }
 }

@@ -6,110 +6,62 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp2.Classes
 {
-    public enum drinksItem
-    {
-        CocaCola,
-        Pepsi,
-        Water,
-        Fanta,
-        NoDrink
-    }
 
     public enum menuItem
     {
-        Chicken,
-        Egg
+        NoDrink = 0,
+        CocaCola = 1,
+        Pepsi = 2,
+        Water = 3,
+        Fanta = 4,
+        Chicken = 5,
+        Egg = 6
     }
 
-    internal class Employee
+    internal class Server
     {
-        /// <summary>
-        /// This field for store our data
-        /// </summary>
-        private string[][] customerOrderData = new string[8][];
+        public menuItem[][] orderStore;
+        private const int MaxCustomerCount = 8;
         private bool customersOrderWasSend = false;
+        private int customerID = 0;
 
         /// <summary>
         /// Gets order quantity and menuItem
         /// </summary>
-        public void NewRequest(string chicken, string egg, string drinksItem)
+        public void SubmitRequest(int chickenCount, int eggCount, string drinksItem)
         {
+            customerID++;
             if (customersOrderWasSend)
             {
                 throw new Exception("Server already have current orders: you cannot order! please continue to prepare an order");
             }
-
-            if (chicken != "" && egg != "" && drinksItem != "")
+            Array.Resize(ref orderStore, customerID);
+            if (drinksItem != "")
             {
-                //customerOrderData[][] = 
+                menuItem[] newInstance = new menuItem[chickenCount + eggCount + 1];
+                try
+                {
+                    for (int a = 0; a < chickenCount; a++)
+                    {
+                        newInstance[a] = menuItem.Chicken;
+                    }
+                    for (int b = chickenCount; b < chickenCount + eggCount; b++)
+                    {
+                        newInstance[b] = menuItem.Egg;
+                    }
+                    newInstance[newInstance.Length - 1] = (menuItem)Enum.Parse(typeof(menuItem), drinksItem);
+                    orderStore[customerID - 1] = newInstance;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    throw new Exception("You cannot enter order out of 8 customer");
+                }
             }
-
-            //object? newOrder = null;
-
-            //if (menuItem == "Chicken")
-            //{
-            //    newOrder = new ChickenOrder(quantity);
-            //}
-            //else
-            //{
-            //    newOrder = new EggOrder(quantity);
-            //}
-            //return newOrder;
         }
 
         public void SendCustomerRequest()
         {
             customersOrderWasSend = true;
         }
-
-        /// <summary>
-        /// Inspect Method will inspect an order
-        /// </summary>
-        /// <param name="obj">should be a new instance of order</param>
-        /// <returns>result of inspection in string ether null</returns>
-        public string Inspect(object obj)
-        {
-            if (obj is EggOrder eggOrder)
-            {
-                int quality = eggOrder.GetQuality();
-                return quality.ToString();
-            }
-            else return "No Inspection required";
-        }
-
-        /// <summary>
-        /// Prepare Food method it will get an object and will prepare
-        /// </summary>
-        /// <param name="obj">Parameter should be a new instance of order</param>
-        /// <returns>Returns a result of cook and prepare</returns>
-        public string PrepareFood(object obj)
-        {
-            string resultMessage;
-            if (obj != null && (obj is EggOrder eggOrder))
-            {
-                for (int i = 0; i < eggOrder.GetQuantity(); i++)
-                {
-                    eggOrder.Crack();
-                    eggOrder.DiscardShell();
-                }
-                eggOrder.Cook();
-                resultMessage = $"Cook Egg has been finished \n" +
-                    $"Quantity of Egg is {eggOrder.GetQuantity()}";
-            }
-            else if (obj != null && (obj is ChickenOrder chickenOrder))
-            {
-                for (int i = 0; i < chickenOrder.GetQuantity(); i++)
-                {
-                    chickenOrder.CutUp();
-                }
-                chickenOrder.Cook();
-                resultMessage = "Cooking Chicken has been finished \n" +
-                    $"Quantity of Chicken is {chickenOrder.GetQuantity()}";
-            }
-            else resultMessage = "You didn't choose any item";
-            return resultMessage;
-        }
-
-
     }
 }
