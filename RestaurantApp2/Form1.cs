@@ -13,13 +13,15 @@ namespace RestaurantApp2
         private void Form1_Load(object sender, EventArgs e)
         {
             comboBoxList();
+            textBoxChicken.Text = "0";
+            textBoxEgg.Text = "0";
         }
 
         private void submitBtn_Click(object sender, EventArgs e)
         {
             int chickenQuantity, eggQuantity;
-            if ((Int32.TryParse(textBoxChicken.Text, out chickenQuantity) && chickenQuantity != 0) && (Int32.TryParse(textBoxEgg.Text, out eggQuantity) && eggQuantity != 0))
-            {
+            if (Int32.TryParse(textBoxChicken.Text, out chickenQuantity) && Int32.TryParse(textBoxEgg.Text, out eggQuantity))
+            {      
                 try
                 {
                     server.SubmitRequest(chickenQuantity, eggQuantity, drinksComBox.Text);
@@ -37,7 +39,6 @@ namespace RestaurantApp2
         /// </summary>
         private void comboBoxList()
         {
-            drinksComBox.SelectedValue = menuItem.NoDrink;
 
             //drinksComBox.DataSource = Enum.GetNames(typeof(menuItem));
             var drinksList = Enum.GetNames(typeof(menuItem));

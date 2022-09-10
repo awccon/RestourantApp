@@ -30,5 +30,10 @@ namespace RestaurantApp2.Classes
         {
 
         }
+
+        public virtual int SubtractQuantity(int quantityOfItem)
+        {
+            return quantity - quantityOfItem;
+        }
     }
 }

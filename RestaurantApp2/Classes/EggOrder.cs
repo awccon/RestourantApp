@@ -65,5 +65,10 @@ namespace RestaurantApp2.Classes
         {
             // This is reponsible for cook egg
         }
+
+        public override int SubtractQuantity(int quantityOfItem)
+        {
+            return base.quantity - quantityOfItem;
+        }
     }
 }
