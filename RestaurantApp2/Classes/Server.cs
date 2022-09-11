@@ -36,6 +36,10 @@ namespace RestaurantApp2.Classes
         {
             submitOrder = true;
             customerID++;
+            if (customerID > MaxCustomerCount)
+            {
+                throw new Exception("You cannot enter order out of 8 customer");
+            }
             if (orderSentToCook) // It will throw an exception if we send orders and want to place a new order
             {
                 throw new Exception("Server already have current orders: you cannot order! please continue to prepare an order");
@@ -47,10 +51,6 @@ namespace RestaurantApp2.Classes
                 menuItem[] customerOrder = new menuItem[chickenCount + eggCount + 1];
                 try
                 {
-                    if (orderStore.Length > MaxCustomerCount)
-                    {
-                        throw new Exception("You cannot enter order out of 8 customer");
-                    }
                     for (int a = 0; a < chickenCount; a++)
                     {
                         customerOrder[a] = menuItem.Chicken;
@@ -69,7 +69,7 @@ namespace RestaurantApp2.Classes
             }
         }
 
-        public void SendCustomerRequest()
+        public int SendCustomerRequest()
         {
             orderSentToCook = true;
             int chickenCount = 0;
@@ -90,9 +90,11 @@ namespace RestaurantApp2.Classes
             }
             Cook ChefCook = new Cook(chickenCount, eggCount);
             (chickenObj, eggObj) = ChefCook.PrepareFood();
+            EggOrder egg = (EggOrder)eggObj;
+            return egg.GetQuality();
         }
 
-        public string ServeCustomer()
+        public string ServeCustomer(int i)
         {
             string Message = "";
             if (submitOrder)
@@ -104,8 +106,6 @@ namespace RestaurantApp2.Classes
             ChickenOrder chick = (ChickenOrder)chickenObj;
             EggOrder egg = (EggOrder)eggObj;
 
-            for (int i = 0; i < orderStore.Length; i++) // This loop used to define count of chicken from orderStore
-            {
                 int chickenCount = 0;
                 int eggCount = 0;
                 string drink = "";
@@ -125,10 +125,8 @@ namespace RestaurantApp2.Classes
                 }
                 chick.SubtractQuantity(chickenCount);
                 egg.SubtractQuantity(eggCount);
-
-                Message += $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drink} \n";
-            }
-            return Message;
+                return Message = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drink}";
+            
         }
     }
 }

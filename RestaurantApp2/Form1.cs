@@ -39,6 +39,7 @@ namespace RestaurantApp2
         /// </summary>
         private void comboBoxList()
         {
+            drinksComBox.Text = menuItem.NoDrink.ToString();
             var drinksList = Enum.GetNames(typeof(menuItem));
             for (int i = 0; i < drinksList.Length - 2; i++)
             {
@@ -56,19 +57,23 @@ namespace RestaurantApp2
         // This button use for send menu items to the cook
         private void sendBtn_Click(object sender, EventArgs e)
         {
-            server.SendCustomerRequest();
+            eggQualityLb.Text = server.SendCustomerRequest().ToString();
             //eggQualityLb.Text = server.qualityOfEgg.ToString();
         }
 
         private void serveBtn_Click(object sender, EventArgs e)
         {
 
-            resultsListBox.Items.Add(server.ServeCustomer());
+            for (int i = 0; i < server.orderStore.Length; i++)
+            {
+                resultsListBox.Items.Add(server.ServeCustomer(i));
+            }
 
             for (int i = 0; i < server.orderStore.Length; i++)
             {
                 Array.Clear(server.orderStore[i], 0, server.orderStore[i].Length);
             }
+            resultsListBox.Items.Add("Please enjoy your food!");
         }
     }
 }
