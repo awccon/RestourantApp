@@ -18,7 +18,7 @@ namespace RestaurantApp2.Classes
         /// <param name="quantity">quantity of item</param>
         public ChickenOrder(int quantity) : base(quantity)
         {
-            //base.quantity = quantity;
+            base.quantity = quantity;
         }
 
         /// <summary>

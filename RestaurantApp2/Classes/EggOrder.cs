@@ -11,7 +11,7 @@ namespace RestaurantApp2.Classes
     /// </summary>
     internal class EggOrder : Order
     {
-        private static int _eggQualityCount = 0;
+        //private static int _eggQualityCount = 0;
         private int random = new Random().Next(101);
         
         /// <summary>
@@ -20,8 +20,8 @@ namespace RestaurantApp2.Classes
         /// <param name="quantity">Quantity of item</param>
         public EggOrder(int quantity) : base(quantity)
         {
-            //base.quantity = quantity;
-            _eggQualityCount++;
+            base.quantity = quantity;
+            //_eggQualityCount++;
         }
 
         /// <summary>

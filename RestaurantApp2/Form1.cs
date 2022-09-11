@@ -13,15 +13,14 @@ namespace RestaurantApp2
         private void Form1_Load(object sender, EventArgs e)
         {
             comboBoxList();
-            textBoxChicken.Text = "0";
-            textBoxEgg.Text = "0";
+            ResetForm();
         }
 
         private void submitBtn_Click(object sender, EventArgs e)
         {
             int chickenQuantity, eggQuantity;
             if (Int32.TryParse(textBoxChicken.Text, out chickenQuantity) && Int32.TryParse(textBoxEgg.Text, out eggQuantity))
-            {      
+            {
                 try
                 {
                     server.SubmitRequest(chickenQuantity, eggQuantity, drinksComBox.Text);
@@ -32,6 +31,7 @@ namespace RestaurantApp2
                     resultsListBox.Items.Add(ex.Message);
                 }
             }
+            ResetForm();
         }
 
         /// <summary>
@@ -39,30 +39,35 @@ namespace RestaurantApp2
         /// </summary>
         private void comboBoxList()
         {
-
-            //drinksComBox.DataSource = Enum.GetNames(typeof(menuItem));
             var drinksList = Enum.GetNames(typeof(menuItem));
             for (int i = 0; i < drinksList.Length - 2; i++)
             {
                 drinksComBox.Items.Add(drinksList[i]);
             }
-            
+
+        }
+
+        private void ResetForm()
+        {
+            textBoxChicken.Text = "0";
+            textBoxEgg.Text = "0";
         }
 
         // This button use for send menu items to the cook
         private void sendBtn_Click(object sender, EventArgs e)
         {
             server.SendCustomerRequest();
+            //eggQualityLb.Text = server.qualityOfEgg.ToString();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void serveBtn_Click(object sender, EventArgs e)
         {
+
+            resultsListBox.Items.Add(server.ServeCustomer());
+
             for (int i = 0; i < server.orderStore.Length; i++)
             {
-                foreach (var order in server.orderStore[i])
-                {
-                    resultsListBox.Items.Add(order);
-                }
+                Array.Clear(server.orderStore[i], 0, server.orderStore[i].Length);
             }
         }
     }

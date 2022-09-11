@@ -23,13 +23,18 @@ namespace RestaurantApp2.Classes
         public menuItem[][] orderStore;
         private const int MaxCustomerCount = 8;
         private bool orderSentToCook = false;
+        private bool submitOrder = false;
         private int customerID = 0;
-        
+        private object chickenObj;
+        private object eggObj;
+
+
         /// <summary>
         /// Submit function that takes all item and saves to data storage
         /// </summary>
         public void SubmitRequest(int chickenCount, int eggCount, string drinksItem)
         {
+            submitOrder = true;
             customerID++;
             if (orderSentToCook) // It will throw an exception if we send orders and want to place a new order
             {
@@ -38,7 +43,6 @@ namespace RestaurantApp2.Classes
             Array.Resize(ref orderStore, customerID); //It will resize our data from customer count
             if (drinksItem != "")
             {
-
                 //customerOrder it is used to assign to jagged array every customer order
                 menuItem[] customerOrder = new menuItem[chickenCount + eggCount + 1];
                 try
@@ -67,32 +71,64 @@ namespace RestaurantApp2.Classes
 
         public void SendCustomerRequest()
         {
+            orderSentToCook = true;
             int chickenCount = 0;
             int eggCount = 0;
             for (int i = 0; i < orderStore.Length; i++)
             {
-                
                 foreach (var item in orderStore[i])
                 {
                     if (item == menuItem.Chicken)
                     {
                         chickenCount++;
                     }
-                }
-            }
-
-            for (int i = 0; i < orderStore.Length; i++)
-            {
-                foreach (var item in orderStore[i])
-                {
-                    if (item == menuItem.Egg)
+                    else if (item == menuItem.Egg)
                     {
                         eggCount++;
                     }
                 }
             }
             Cook ChefCook = new Cook(chickenCount, eggCount);
-            orderSentToCook = true;
+            (chickenObj, eggObj) = ChefCook.PrepareFood();
+        }
+
+        public string ServeCustomer()
+        {
+            string Message = "";
+            if (submitOrder)
+            {
+                Message = "Please enter sever a food to the customers";
+            }
+            orderSentToCook=false;
+
+            ChickenOrder chick = (ChickenOrder)chickenObj;
+            EggOrder egg = (EggOrder)eggObj;
+
+            for (int i = 0; i < orderStore.Length; i++) // This loop used to define count of chicken from orderStore
+            {
+                int chickenCount = 0;
+                int eggCount = 0;
+                string drink = "";
+
+                foreach (var item in orderStore[i])
+                {
+                    if (item == menuItem.Chicken)
+                    {
+                        chickenCount++;
+                        
+                    }
+                    else if (item == menuItem.Egg)
+                    {
+                        eggCount++;
+                    }
+                    else drink = item.ToString();
+                }
+                chick.SubtractQuantity(chickenCount);
+                egg.SubtractQuantity(eggCount);
+
+                Message += $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drink} \n";
+            }
+            return Message;
         }
     }
 }
