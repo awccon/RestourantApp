@@ -25,8 +25,8 @@ namespace RestaurantApp2.Classes
         private bool orderSentToCook = false;
         private bool submitOrder = false;
         private int customerID = 0;
-        private object chickenObj;
-        private object eggObj;
+        private ChickenOrder chickenObj;
+        private EggOrder eggObj;
 
 
         /// <summary>
@@ -45,28 +45,28 @@ namespace RestaurantApp2.Classes
                 throw new Exception("Server already have current orders: you cannot order! please continue to prepare an order");
             }
             Array.Resize(ref orderStore, customerID); //It will resize our data from customer count
-            if (drinksItem != "")
+                                                      //if (drinksItem != "")
+                                                      //{
+                                                      //customerOrder it is used to assign to jagged array every customer order
+            menuItem[] customerOrder = new menuItem[chickenCount + eggCount + 1];
+            //try
+            //{
+            for (int a = 0; a < chickenCount; a++)
             {
-                //customerOrder it is used to assign to jagged array every customer order
-                menuItem[] customerOrder = new menuItem[chickenCount + eggCount + 1];
-                try
-                {
-                    for (int a = 0; a < chickenCount; a++)
-                    {
-                        customerOrder[a] = menuItem.Chicken;
-                    }
-                    for (int b = chickenCount; b < chickenCount + eggCount; b++)
-                    {
-                        customerOrder[b] = menuItem.Egg;
-                    }
-                    customerOrder[customerOrder.Length - 1] = (menuItem)Enum.Parse(typeof(menuItem), drinksItem);
-                    orderStore[customerID - 1] = customerOrder;
-                }
-                catch (IndexOutOfRangeException ex)
-                {
-                    throw new Exception(ex.Message);
-                }
+                customerOrder[a] = menuItem.Chicken;
             }
+            for (int b = chickenCount; b < chickenCount + eggCount; b++)
+            {
+                customerOrder[b] = menuItem.Egg;
+            }
+            customerOrder[customerOrder.Length - 1] = (menuItem)Enum.Parse(typeof(menuItem), drinksItem);
+            orderStore[customerID - 1] = customerOrder;
+            //}
+            //catch (IndexOutOfRangeException ex)
+            //{
+            //    throw new Exception(ex.Message);
+            //}
+            //}
         }
 
         public int SendCustomerRequest()
@@ -88,45 +88,49 @@ namespace RestaurantApp2.Classes
                     }
                 }
             }
+            //CR: Cook should created once for the app's life time. We don't want to use a new cook every time when we need the cook. 
             Cook ChefCook = new Cook(chickenCount, eggCount);
+            //CR: We should call the submit method with specifying chicken or egg quantity.
+            //Cr: then we need to call prepare methof for chicken or egg. 
             (chickenObj, eggObj) = ChefCook.PrepareFood();
-            EggOrder egg = (EggOrder)eggObj;
-            return egg.GetQuality();
+            //CR: If customer requests 0 eggs, it still gives me the egg quality. How can I get the egg quality if I don't have eggs?? 
+            return eggObj.GetQuality();
         }
 
         public string ServeCustomer(int i)
         {
+            //CR: This is only serving one customer. Consider serving all customers in this method.
             string Message = "";
             if (submitOrder)
             {
                 Message = "Please enter sever a food to the customers";
             }
-            orderSentToCook=false;
-
+            orderSentToCook = false;
+            //CR: WE don't need to cast now because we already know the type
             ChickenOrder chick = (ChickenOrder)chickenObj;
             EggOrder egg = (EggOrder)eggObj;
 
-                int chickenCount = 0;
-                int eggCount = 0;
-                string drink = "";
+            int chickenCount = 0;
+            int eggCount = 0;
+            string drink = "";
 
-                foreach (var item in orderStore[i])
+            foreach (var item in orderStore[i])
+            {
+                if (item == menuItem.Chicken)
                 {
-                    if (item == menuItem.Chicken)
-                    {
-                        chickenCount++;
-                        
-                    }
-                    else if (item == menuItem.Egg)
-                    {
-                        eggCount++;
-                    }
-                    else drink = item.ToString();
+                    chickenCount++;
+
                 }
-                chick.SubtractQuantity(chickenCount);
-                egg.SubtractQuantity(eggCount);
-                return Message = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drink}";
-            
+                else if (item == menuItem.Egg)
+                {
+                    eggCount++;
+                }
+                else drink = item.ToString();
+            }
+            //CR: Why are we subtracting the quantity?? we are not checking if any leftover food there. 
+            chick.SubtractQuantity(chickenCount);
+            egg.SubtractQuantity(eggCount);
+            return Message = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drink}";
         }
     }
 }

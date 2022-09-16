@@ -20,17 +20,8 @@ namespace RestaurantApp2.Classes
         /// <param name="quantity">Quantity of item</param>
         public EggOrder(int quantity) : base(quantity)
         {
-            base.quantity = quantity;
+            //CR: Not needed    base.quantity = quantity;
             //_eggQualityCount++;
-        }
-
-        /// <summary>
-        /// Get Quantity of Egg
-        /// </summary>
-        /// <returns>quantity</returns>
-        public override int GetQuantity()
-        {
-             return base.quantity;
         }
 
         /// <summary>
@@ -66,9 +57,5 @@ namespace RestaurantApp2.Classes
             // This is reponsible for cook egg
         }
 
-        public override int SubtractQuantity(int quantityOfItem)
-        {
-            return base.quantity - quantityOfItem;
-        }
     }
 }

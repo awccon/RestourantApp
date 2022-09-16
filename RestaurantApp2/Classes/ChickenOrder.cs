@@ -18,16 +18,7 @@ namespace RestaurantApp2.Classes
         /// <param name="quantity">quantity of item</param>
         public ChickenOrder(int quantity) : base(quantity)
         {
-            base.quantity = quantity;
-        }
-
-        /// <summary>
-        /// Gets quantity from constructor
-        /// </summary>
-        /// <returns>quantity type integer</returns>
-        public override int GetQuantity()
-        {
-            return base.quantity;
+            //CR: not needed:     base.quantity = quantity;
         }
 
         /// <summary>
@@ -43,11 +34,11 @@ namespace RestaurantApp2.Classes
         /// </summary>
         public override void Cook()
         {
-            // This is responsible for cook chicken
+            for (int i = 1; i <= quantity; i++)
+            {
+                CutUp();
+            }
         }
-        public override int SubtractQuantity(int quantityOfItem)
-        {
-            return base.quantity - quantityOfItem;
-        }
+
     }
 }

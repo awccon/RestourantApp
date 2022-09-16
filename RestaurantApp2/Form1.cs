@@ -63,7 +63,7 @@ namespace RestaurantApp2
 
         private void serveBtn_Click(object sender, EventArgs e)
         {
-
+            //This should happen in the Server's serve method. We don't want to deal with this here. We just call the server.Serve method
             for (int i = 0; i < server.orderStore.Length; i++)
             {
                 resultsListBox.Items.Add(server.ServeCustomer(i));
@@ -73,6 +73,9 @@ namespace RestaurantApp2
             {
                 Array.Clear(server.orderStore[i], 0, server.orderStore[i].Length);
             }
+
+            //resultsListBox.Items.Insert(0, "");
+            //resultsListBox.Items.AddRange(new string[3] {"","","" });
             resultsListBox.Items.Add("Please enjoy your food!");
         }
     }
