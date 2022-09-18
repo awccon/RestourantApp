@@ -53,7 +53,10 @@ namespace RestaurantApp2
             //{
             //    Array.Clear(server.orderStore[i], 0, server.orderStore[i].Length);
             //}
-            resultsListBox.Items.AddRange(server.ServeCustomer());
+            foreach (var item in server.ServeCustomer())
+            {
+                resultsListBox.Items.Add(item);
+            }
             //resultsListBox.Items.Add("Please enjoy your food!");
         }
 
