@@ -52,6 +52,7 @@ namespace RestaurantApp2
         {
             textBoxChicken.Text = "0";
             textBoxEgg.Text = "0";
+            resultsListBox.Items.Clear();
         }
 
         // This button use for send menu items to the cook
@@ -63,7 +64,6 @@ namespace RestaurantApp2
 
         private void serveBtn_Click(object sender, EventArgs e)
         {
-
             for (int i = 0; i < server.orderStore.Length; i++)
             {
                 resultsListBox.Items.Add(server.ServeCustomer(i));

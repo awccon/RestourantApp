@@ -115,7 +115,6 @@ namespace RestaurantApp2.Classes
                     if (item == menuItem.Chicken)
                     {
                         chickenCount++;
-                        
                     }
                     else if (item == menuItem.Egg)
                     {
@@ -126,7 +125,6 @@ namespace RestaurantApp2.Classes
                 chick.SubtractQuantity(chickenCount);
                 egg.SubtractQuantity(eggCount);
                 return Message = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drink}";
-            
         }
     }
 }
