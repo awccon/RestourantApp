@@ -24,7 +24,7 @@ namespace RestaurantApp2.Classes
         /// <summary>
         /// Method to cut a meat, it shoul be called the num of times in quantity
         /// </summary>
-        public void CutUp()
+        private void CutUp()
         {
 
         }

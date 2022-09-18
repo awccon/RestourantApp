@@ -8,31 +8,39 @@ namespace RestaurantApp2.Classes
 {
     internal class Cook
     {
-
         //CR: Why these fields are static?
-        private static int quantityOfChicken;
-        private static int quantityOfEgg;
-        public Cook(int QuantityOfChicken, int QuantityOfEgg)
-        {
-            quantityOfChicken = QuantityOfChicken;
-            quantityOfEgg = QuantityOfEgg;
-        }
-        
-        //CR: Why the return parameters are object type? 
-        public (ChickenOrder, EggOrder) PrepareFood()
-        {
-            //CR: What is I have no chickens or eggs? Why do I create their instance? 
-            ChickenOrder chicken = new ChickenOrder(quantityOfChicken);
-            EggOrder egg = new EggOrder(quantityOfEgg);
-            chicken.Cook();
+        private int orderCount;
+        private string orderType = "";
 
-            for (int i = 0; i < egg.GetQuantity(); i++)
+        /// <summary>
+        /// This method is responsible to get quantity of order and type of order
+        /// </summary>
+        /// <param name="orderCount">quantity of order</param>
+        /// <param name="orderType">type of order</param>
+        public void Submit(int orderCount, string orderType)
+        {
+            this.orderCount = orderCount;
+            this.orderType = orderType;
+        }
+
+        //CR: Why the return parameters are object type? 
+        public object Prepare()
+        {
+            object returnPrepOrder = new Object();
+            if (orderCount != 0 && orderType == "Chicken")
             {
-                egg.Crack();
-                egg.DiscardShell();
+                ChickenOrder chicken = new ChickenOrder(orderCount);
+                chicken.Cook();
+                returnPrepOrder = chicken;
             }
-            egg.Cook();
-            return (chicken, egg);
+            //CR: What is I have no chickens or eggs? Why do I create their instance? 
+            if (orderCount != 0 && orderType == "Egg")
+            {
+                EggOrder egg = new EggOrder(orderCount);
+                egg.Cook();
+                returnPrepOrder = egg;
+            }
+            return returnPrepOrder;
         }
 
     }

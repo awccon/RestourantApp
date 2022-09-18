@@ -34,6 +34,29 @@ namespace RestaurantApp2
             ResetForm();
         }
 
+        
+        // This button use for send menu items to the cook
+        private void sendBtn_Click(object sender, EventArgs e)
+        {
+            eggQualityLb.Text = server.SendCustomerRequest();
+        }
+
+        private void serveBtn_Click(object sender, EventArgs e)
+        {
+            //This should happen in the Server's serve method. We don't want to deal with this here. We just call the server.Serve method
+            //for (int i = 0; i < server.orderStore.Length; i++)
+            //{
+            //    resultsListBox.Items.Add(server.ServeCustomer(i));
+            //}
+
+            //for (int i = 0; i < server.orderStore.Length; i++)
+            //{
+            //    Array.Clear(server.orderStore[i], 0, server.orderStore[i].Length);
+            //}
+            resultsListBox.Items.AddRange(server.ServeCustomer());
+            //resultsListBox.Items.Add("Please enjoy your food!");
+        }
+
         /// <summary>
         /// This function used to iterate all drinks list and assign it to ComboBox
         /// </summary>
@@ -55,26 +78,5 @@ namespace RestaurantApp2
             resultsListBox.Items.Clear();
         }
 
-        // This button use for send menu items to the cook
-        private void sendBtn_Click(object sender, EventArgs e)
-        {
-            eggQualityLb.Text = server.SendCustomerRequest().ToString();
-            //eggQualityLb.Text = server.qualityOfEgg.ToString();
-        }
-
-        private void serveBtn_Click(object sender, EventArgs e)
-        {
-            //This should happen in the Server's serve method. We don't want to deal with this here. We just call the server.Serve method
-            for (int i = 0; i < server.orderStore.Length; i++)
-            {
-                resultsListBox.Items.Add(server.ServeCustomer(i));
-            }
-
-            for (int i = 0; i < server.orderStore.Length; i++)
-            {
-                Array.Clear(server.orderStore[i], 0, server.orderStore[i].Length);
-            }
-            resultsListBox.Items.Add("Please enjoy your food!");
-        }
     }
 }

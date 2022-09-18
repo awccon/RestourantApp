@@ -21,7 +21,6 @@ namespace RestaurantApp2.Classes
         public EggOrder(int quantity) : base(quantity)
         {
             //CR: Not needed    base.quantity = quantity;
-            //_eggQualityCount++;
         }
 
         /// <summary>
@@ -36,7 +35,7 @@ namespace RestaurantApp2.Classes
         /// <summary>
         /// Crack method
         /// </summary>
-        public void Crack()
+        private void Crack()
         {
 
         }
@@ -44,18 +43,21 @@ namespace RestaurantApp2.Classes
         /// <summary>
         /// Discard Shell method doesn't return anithing
         /// </summary>
-        public void DiscardShell()
+        private void DiscardShell()
         {
 
         }
 
         /// <summary>
-        /// Cook method doesn't return anithing
+        /// Cook method: Crack's an egg, discard's the shell and cooks it
         /// </summary>
         public override void Cook()
         {
-            // This is reponsible for cook egg
+            for (int i = 0; i < quantity; i++)
+            {
+                Crack();
+                DiscardShell();
+            }
         }
-
     }
 }
