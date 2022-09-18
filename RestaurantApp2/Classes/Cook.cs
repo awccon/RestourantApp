@@ -8,6 +8,8 @@ namespace RestaurantApp2.Classes
 {
     internal class Cook
     {
+
+        //CR: Why these fields are static?
         private static int quantityOfChicken;
         private static int quantityOfEgg;
         public Cook(int QuantityOfChicken, int QuantityOfEgg)
@@ -16,14 +18,12 @@ namespace RestaurantApp2.Classes
             quantityOfEgg = QuantityOfEgg;
         }
         
-        public (object, object) PrepareFood()
+        //CR: Why the return parameters are object type? 
+        public (ChickenOrder, EggOrder) PrepareFood()
         {
+            //CR: What is I have no chickens or eggs? Why do I create their instance? 
             ChickenOrder chicken = new ChickenOrder(quantityOfChicken);
             EggOrder egg = new EggOrder(quantityOfEgg);
-            for (int i = 0; i < chicken.GetQuantity(); i++)
-            {
-                chicken.CutUp();
-            }
             chicken.Cook();
 
             for (int i = 0; i < egg.GetQuantity(); i++)

@@ -18,7 +18,7 @@ namespace RestaurantApp2.Classes
         /// gets quantity and returns
         /// </summary>
         /// <returns></returns>
-        public virtual int GetQuantity()
+        public int GetQuantity()
         {
             return quantity;
         }
@@ -31,9 +31,9 @@ namespace RestaurantApp2.Classes
 
         }
 
-        public virtual int SubtractQuantity(int quantityOfItem)
+        public void SubtractQuantity(int quantityOfItem)
         {
-            return quantity - quantityOfItem;
+            quantity = quantity - quantityOfItem;
         }
     }
 }
