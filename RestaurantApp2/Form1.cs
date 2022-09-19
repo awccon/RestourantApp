@@ -15,54 +15,47 @@ namespace RestaurantApp2
             comboBoxList();
             ResetForm();
         }
-
         private void submitBtn_Click(object sender, EventArgs e)
         {
-            int chickenQuantity, eggQuantity;
-            if (Int32.TryParse(textBoxChicken.Text, out chickenQuantity) && Int32.TryParse(textBoxEgg.Text, out eggQuantity))
+            try
             {
-                try
-                {
-                    server.SubmitRequest(chickenQuantity, eggQuantity, drinksComBox.Text);
-                }
-                catch (Exception ex)
-                {
-                    resultsListBox.Items.Clear();
-                    resultsListBox.Items.Add(ex.Message);
-                }
+                server.SubmitRequest(textBoxChicken.Text,textBoxEgg.Text, drinksComBox.Text);
+                ResetForm();
             }
-            ResetForm();
+            catch (Exception ex)
+            {
+                ResetForm();
+                resultsListBox.Items.Clear();
+                resultsListBox.Items.Add(ex.Message);
+            }
         }
-
-        
-        // This button use for send menu items to the cook
         private void sendBtn_Click(object sender, EventArgs e)
         {
-            eggQualityLb.Text = server.SendCustomerRequest();
+            try
+            {
+                eggQualityLb.Text = server.SendCustomerRequest();
+            }
+            catch (Exception ex)
+            {
+                resultsListBox.Items.Add(ex.Message);
+            }
         }
-
         private void serveBtn_Click(object sender, EventArgs e)
         {
+            ResetForm();
             //This should happen in the Server's serve method. We don't want to deal with this here. We just call the server.Serve method
-            //for (int i = 0; i < server.orderStore.Length; i++)
-            //{
-            //    resultsListBox.Items.Add(server.ServeCustomer(i));
-            //}
-
-            //for (int i = 0; i < server.orderStore.Length; i++)
-            //{
-            //    Array.Clear(server.orderStore[i], 0, server.orderStore[i].Length);
-            //}
-            foreach (var item in server.ServeCustomer())
+            try
             {
-                resultsListBox.Items.Add(item);
+                foreach (var item in server.ServeCustomer())
+                {
+                    resultsListBox.Items.Add(item);
+                }
             }
-            //resultsListBox.Items.Add("Please enjoy your food!");
+            catch (Exception ex)
+            {
+                resultsListBox.Items.Add(ex.Message);
+            }
         }
-
-        /// <summary>
-        /// This function used to iterate all drinks list and assign it to ComboBox
-        /// </summary>
         private void comboBoxList()
         {
             drinksComBox.Text = menuItem.NoDrink.ToString();
@@ -71,15 +64,12 @@ namespace RestaurantApp2
             {
                 drinksComBox.Items.Add(drinksList[i]);
             }
-
         }
-
         private void ResetForm()
         {
             textBoxChicken.Text = "0";
             textBoxEgg.Text = "0";
             resultsListBox.Items.Clear();
         }
-
     }
 }

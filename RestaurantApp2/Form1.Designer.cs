@@ -161,9 +161,8 @@
             this.eggQualityLb.AutoSize = true;
             this.eggQualityLb.Location = new System.Drawing.Point(197, 346);
             this.eggQualityLb.Name = "eggQualityLb";
-            this.eggQualityLb.Size = new System.Drawing.Size(33, 20);
+            this.eggQualityLb.Size = new System.Drawing.Size(0, 20);
             this.eggQualityLb.TabIndex = 11;
-            this.eggQualityLb.Text = "100";
             // 
             // label5
             // 
@@ -189,7 +188,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "TajGrill";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
