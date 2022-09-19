@@ -7,19 +7,27 @@ using System.Threading.Tasks;
 namespace RestaurantApp2.Classes
 {
 
+    /// <summary>
+    /// List of drinks and cooks
+    /// </summary>
     public enum menuItem
     {
         NoDrink = 0,
-        CocaCola = 1,
+        Cola = 1,
         Pepsi = 2,
-        Water = 3,
+        Tea = 3,
         Fanta = 4,
-        Chicken = 5,
-        Egg = 6
+        Coke = 5,
+        Soda = 6,
+        Chicken = 7,
+        Egg = 8
     }
 
     internal class Server
     {
+        /// <summary>
+        /// Stores orders
+        /// </summary>
         private menuItem[][] orderStore;
         private const int MaxCustomerCount = 8;
         private bool submitBtn = false;
@@ -28,25 +36,26 @@ namespace RestaurantApp2.Classes
         private ChickenOrder chickenObj;
         private EggOrder eggObj;
 
-
         /// <summary>
-        /// Submit function that takes all item and saves to data storage
+        /// This method gets value and stores to array
         /// </summary>
+        /// <param name="chickenValue">quantity of chicken</param>
+        /// <param name="eggValue">quantity of egg</param>
+        /// <param name="drinksItem">drink</param>
+        /// <exception cref="Exception">Exception when you haven't clicked to send button</exception>
         public void SubmitRequest(string chickenValue, string eggValue, string drinksItem)
         {
             if (!sendBtn)
             {
-                submitBtn = true;
                 int chickenCount, eggQuantity;
-                if (Int32.TryParse(chickenValue, out chickenCount) && Int32.TryParse(eggValue, out eggQuantity))
+                if ((Int32.TryParse(chickenValue, out chickenCount) && chickenCount >= 0) && (Int32.TryParse(eggValue, out eggQuantity) && eggQuantity >= 0))
                 {
-                    //
+                    submitBtn = true;
                     customerID++;
                     if (customerID > MaxCustomerCount)
                     {
                         throw new Exception("You cannot enter order out of 8 customer");
                     }
-                    //
                     Array.Resize(ref orderStore, customerID);
                     menuItem[] customerOrder = new menuItem[chickenCount + eggQuantity + 1];
                     for (int a = 0; a < chickenCount; a++)
@@ -65,6 +74,11 @@ namespace RestaurantApp2.Classes
             else throw new Exception("Please serve the current order");
         }
 
+        /// <summary>
+        /// This method sends all order count to the cook and returns quality of egg
+        /// </summary>
+        /// <returns>Quality of egg</returns>
+        /// <exception cref="Exception">Exception if order wasn't submitted yet</exception>
         public string SendCustomerRequest()
         {
             if (!submitBtn)
@@ -108,6 +122,11 @@ namespace RestaurantApp2.Classes
             //CR: If customer requests 0 eggs, it still gives me the egg quality. How can I get the egg quality if I don't have eggs?? 
         }
 
+        /// <summary>
+        /// This method serves customer orders and returns array
+        /// </summary>
+        /// <returns>Array</returns>
+        /// <exception cref="Exception">When submit button or send button wasn't clicked</exception>
         public Array ServeCustomer()
         {
             //CR: This is only serving one customer. Consider serving all customers in this method.
