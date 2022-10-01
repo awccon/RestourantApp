@@ -23,18 +23,24 @@ namespace RestaurantApp2.Classes
         Egg = 8
     }
 
+    public enum appStatus
+	{
+        submitted,
+        sent,
+        served
+	}
+
     internal class Server
     {
         /// <summary>
         /// Stores orders
         /// </summary>
-        private menuItem[][] orderStore;
+        private menuItem[][] orderStore = new menuItem[0][];
         private const int MaxCustomerCount = 8;
-        private bool submitBtn = false;
-        private bool sendBtn = false;
         private int customerID = 0;
         private ChickenOrder chickenObj;
         private EggOrder eggObj;
+        appStatus orderStatus;
 
         /// <summary>
         /// This method gets value and stores to array
@@ -45,16 +51,15 @@ namespace RestaurantApp2.Classes
         /// <exception cref="Exception">Exception when you haven't clicked to send button</exception>
         public void SubmitRequest(string chickenValue, string eggValue, string drinksItem)
         {
-            if (!sendBtn)
+            if (orderStatus != appStatus.sent)
             {
                 int chickenCount, eggQuantity;
                 if ((Int32.TryParse(chickenValue, out chickenCount) && chickenCount >= 0) && (Int32.TryParse(eggValue, out eggQuantity) && eggQuantity >= 0))
                 {
-                    submitBtn = true;
                     customerID++;
                     if (customerID > MaxCustomerCount)
                     {
-                        throw new Exception("You cannot enter order out of 8 customer");
+                        throw new Exception("Range of customers up to 8");
                     }
                     Array.Resize(ref orderStore, customerID);
                     menuItem[] customerOrder = new menuItem[chickenCount + eggQuantity + 1];
@@ -69,9 +74,10 @@ namespace RestaurantApp2.Classes
                     customerOrder[customerOrder.Length - 1] = (menuItem)Enum.Parse(typeof(menuItem), drinksItem);
                     orderStore[customerID - 1] = customerOrder;
                 }
-                else throw new Exception("Enter correct number of order");
+                else throw new Exception("Count of order incorrect");
             }
-            else throw new Exception("Please serve the current order");
+            else throw new Exception("Order didn't served");
+            orderStatus = appStatus.submitted;
         }
 
         /// <summary>
@@ -81,41 +87,40 @@ namespace RestaurantApp2.Classes
         /// <exception cref="Exception">Exception if order wasn't submitted yet</exception>
         public string SendCustomerRequest()
         {
-            if (!submitBtn)
+            if (orderStatus == appStatus.submitted)
             {
-                throw new Exception("Please submit an order");
-            }
-            sendBtn = true;
-            int chickenCount = 0;
-            int eggCount = 0;
-            for (int i = 0; i < orderStore.Length; i++)
-            {
-                foreach (var item in orderStore[i])
+                int chickenCount = 0, eggCount = 0;
+                for (int i = 0; i < orderStore.Length; i++)
                 {
-                    if (item == menuItem.Chicken)
+                    foreach (var item in orderStore[i])
                     {
-                        chickenCount++;
-                    }
-                    else if (item == menuItem.Egg)
-                    {
-                        eggCount++;
+                        if (item == menuItem.Chicken)
+                        {
+                            chickenCount++;
+                        }
+                        else if (item == menuItem.Egg)
+                        {
+                            eggCount++;
+                        }
                     }
                 }
+                //CR: Cook should created once for the app's life time. We don't want to use a new cook every time when we need the cook. 
+                Cook ChefCook = new Cook();
+                orderStatus = appStatus.sent;
+                if (chickenCount != 0)
+                {
+                    ChefCook.Submit(chickenCount, menuItem.Chicken);
+                    chickenObj = (ChickenOrder)ChefCook.Prepare();
+                }
+                if (eggCount != 0)
+                {
+                    ChefCook.Submit(eggCount, menuItem.Egg);
+                    eggObj = (EggOrder)ChefCook.Prepare();
+                    return eggObj.GetQuality().ToString();
+                }
+                else return "There is no egg to inspect needed";
             }
-            //CR: Cook should created once for the app's life time. We don't want to use a new cook every time when we need the cook. 
-            Cook ChefCook = new Cook();
-            if (chickenCount != 0)
-            {
-                ChefCook.Submit(chickenCount, "Chicken");
-                chickenObj = (ChickenOrder)ChefCook.Prepare();
-            }
-            if (eggCount != 0)
-            {
-                ChefCook.Submit(eggCount, "Egg");
-                eggObj = (EggOrder)ChefCook.Prepare();
-                return eggObj.GetQuality().ToString();
-            }
-            else return "There is no egg to inspect needed";
+            else throw new Exception("Order didn't submitted");
 
             //CR: We should call the submit method with specifying chicken or egg quantity.
             //Cr: then we need to call prepare methof for chicken or egg. 
@@ -127,25 +132,21 @@ namespace RestaurantApp2.Classes
         /// </summary>
         /// <returns>Array</returns>
         /// <exception cref="Exception">When submit button or send button wasn't clicked</exception>
-        public Array ServeCustomer()
+        public string[] ServeCustomer()
         {
             //CR: This is only serving one customer. Consider serving all customers in this method.
             //CR: WE don't need to cast now because we already know the type
-            if (!submitBtn)
+            
+            if (orderStatus != appStatus.sent)
             {
-                throw new Exception("Please submit the orders");
-            }
-            if (!sendBtn)
-            {
-                throw new Exception("Please send current order to the Cook");
+                throw new Exception("Order wasn't sent to cook yet");
             }
             
             string[] orderResutl = new string[orderStore.Length + 1];
             for (int i = 0; i < orderStore.Length; i++)
             {
-                int chickenCount = 0;
-                int eggCount = 0;
-                string drink = "";
+                int chickenCount = 0, eggCount = 0;
+                menuItem drink = menuItem.NoDrink;
                 foreach (var item in orderStore[i])
                 {
                     if (item == menuItem.Chicken)
@@ -156,29 +157,27 @@ namespace RestaurantApp2.Classes
                     {
                         eggCount++;
                     }
-                    else drink = item.ToString();
+                    else drink = item;
                 }
+                
+                //CR: I should change the subtract and add exeption
+                //if (chickenObj != null && chickenObj.quantity > 0)
+                //{
+                //    chickenObj.SubtractQuantity(chickenCount);
+                //}
+                //else chickenCount = 0;
+                //if (eggObj != null && eggObj.quantity > 0)
+                //{
+                //    eggObj.SubtractQuantity(eggCount);
+                //}
+                //else eggCount = 0;
 
-                if (chickenObj != null && chickenObj.quantity > 0)
-                {
-                    chickenObj.SubtractQuantity(chickenCount);
-                }
-                else chickenCount = 0;
-                if (eggObj != null && eggObj.quantity > 0)
-                {
-                    eggObj.SubtractQuantity(eggCount);
-                }
-                else eggCount = 0;
-                orderResutl[i] = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drink}";
+                orderResutl[i] = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {Enum.GetName(typeof(menuItem), drink)}";
             }
             orderResutl[orderResutl.Length - 1] = "Please enjoy your food!";
-            for (int i = 0; i < orderStore.Length; i++)
-            {
-                Array.Clear(orderStore[i], 0, orderStore[i].Length);
-            }
-            sendBtn = false;
-            submitBtn = false;
             customerID = 0;
+            orderStore = new menuItem[0][];
+            orderStatus = appStatus.served;
             return orderResutl;
             
             //CR: Why are we subtracting the quantity?? we are not checking if any leftover food there. 
