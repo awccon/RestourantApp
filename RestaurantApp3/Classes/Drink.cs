@@ -9,15 +9,17 @@ namespace RestaurantApp3.Classes
 	abstract class Drinks : MenuItem //, IDisposable
 	{
 		static int counter = 0;
+		int localcounter = 0;
 		//private bool disposedValue = false;
 
 		public Drinks()
 		{
 			counter++;
+			localcounter = counter;
 		}
 		public override string ToString()
 		{
-			return this.GetType().Name + " " + counter;
+			return this.GetType().Name + " " + localcounter;
 		}
 
 		//protected virtual void Dispose(bool disposing)

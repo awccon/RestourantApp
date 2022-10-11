@@ -30,15 +30,16 @@ namespace RestaurantApp3.Classes
 	sealed class Egg : CookableFoods, IDisposable
 	{
 		static int counter = 0;
-
+		int localcounter = 0;
 		public Egg()
 		{
 			counter++;
+			localcounter = counter;
 		}
 
 		public override string ToString()
 		{
-			return this.GetType().Name + " " + counter;
+			return this.GetType().Name + " " + localcounter;
 		}
 
 		public void Crack() { }

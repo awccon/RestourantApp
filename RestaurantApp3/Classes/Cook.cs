@@ -16,12 +16,10 @@ namespace RestaurantApp3.Classes
 
 			foreach (var eggItem in egg)
 			{
-				using (var eg = (Egg)eggItem)
-				{
-					eg.Obtain();
-					eg.Cook();
-					eg.Dispose();
-				}
+				var eg = (Egg)eggItem;
+				eg.Obtain();
+				eg.Cook();
+
 			}
 
 
