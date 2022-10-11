@@ -6,7 +6,33 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp3.Classes
 {
-	internal class Cook
+	sealed class Cook
 	{
+		public void Process(TableRequests tableRequests)
+		{
+			var chick = tableRequests[typeof(Chicken)];
+
+			var egg = tableRequests[typeof(Egg)];
+
+			foreach (var eggItem in egg)
+			{
+				using (var eg = (Egg)eggItem)
+				{
+					eg.Obtain();
+					eg.Cook();
+					eg.Dispose();
+				}
+			}
+
+
+			foreach (var ch in chick)
+			{
+				var chicken = (Chicken)ch;
+				chicken.Obtain();
+				chicken.Cook();
+			}
+
+			throw new Exception("Cooking foods completed.......");
+		}
 	}
 }
