@@ -4,7 +4,7 @@ namespace RestaurantApp3
 {
 	public partial class Form1 : Form
 	{
-		Server srv = new Server();
+		Server server = new Server();
 		public Form1()
 		{
 			InitializeComponent();
@@ -15,18 +15,21 @@ namespace RestaurantApp3
 		{
 			try
 			{
-				drinksList drinkStatus;
-				int.TryParse(chickentxt.Text, out int ch);
-				int.TryParse(eggtxt.Text, out int egg);
-				Enum.TryParse(comboBox1.SelectedValue.ToString(), out drinkStatus);
-				srv.Receive(ch, egg, drinkStatus);
-				chickentxt.Text = "";
-				eggtxt.Text = "";
+				drinksList Drink;
+				int.TryParse(chickentxt.Text, out int ChickenCount);
+				int.TryParse(eggtxt.Text, out int EggCount);
+				Enum.TryParse(comboBox1.SelectedValue.ToString(), out Drink);
+				server.Receive(ChickenCount, EggCount, Drink);
 			}
 			catch (Exception ex)
 			{
 				resutlListBox.Items.Clear();
 				resutlListBox.Items.Add(ex.Message);
+			}
+			finally
+			{
+				chickentxt.Text = "";
+				eggtxt.Text = "";
 			}
 		}
 
@@ -34,7 +37,7 @@ namespace RestaurantApp3
 		{
 			try
 			{
-				srv.Obtain();
+				server.Obtain();
 			}
 			catch (Exception ex)
 			{
@@ -48,7 +51,7 @@ namespace RestaurantApp3
 			try
 			{
 				resutlListBox.Items.Clear();
-				foreach (var item in srv.Serve())
+				foreach (var item in server.Serve())
 				{
 					resutlListBox.Items.Add(item);
 				}

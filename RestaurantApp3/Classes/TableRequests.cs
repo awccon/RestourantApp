@@ -6,43 +6,62 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp3.Classes
 {
+	/// <summary>
+	/// it can get an orders with method Add, returns an orders with customer id and menu item
+	/// </summary>
 	internal class TableRequests
 	{
-		public MenuItem[][] orderStore = new MenuItem[0][];
+		private MenuItem[][] customerOrders = new MenuItem[0][];
 
+		/// <summary>
+		/// This method gets customer id and type of menu item and saves to array
+		/// </summary>
+		/// <param name="customerId"></param>
+		/// <param name="menuItem"></param>
 		public void Add(int customerId, IMenuItem menuItem)
 		{
-			MenuItem[] customerMenuItems = null;
-			if (orderStore.Length >= customerId)
+			MenuItem[] customerMenuItems;
+			if (customerOrders.Length >= customerId)
 			{
-				customerMenuItems = orderStore[customerId-1];
+				customerMenuItems = customerOrders[customerId - 1];
 			}
-			else {
+			else
+			{
 				customerMenuItems = new MenuItem[0];
 			}
-			if (orderStore.Length != customerId)
+			if (customerOrders.Length != customerId)
 			{
-				Array.Resize(ref orderStore, customerId);
+				Array.Resize(ref customerOrders, customerId);
 			}
 			Array.Resize(ref customerMenuItems, customerMenuItems.Length + 1);
 			customerMenuItems[customerMenuItems.Length - 1] = (MenuItem)menuItem;
-			orderStore[customerId-1] = customerMenuItems;
+			customerOrders[customerId - 1] = customerMenuItems;
 		}
 
-
+		/// <summary>
+		/// indexer for each customer order
+		/// </summary>
+		/// <param name="customerID">integer value from 1 to 8</param>
+		/// <returns>each customer order</returns>
 		public MenuItem[] this[int customerID]
 		{
 			get
 			{
-				return orderStore[customerID];
+				return customerOrders[customerID];
 			}
 		}
+
+		/// <summary>
+		/// indexer for each menu item
+		/// </summary>
+		/// <param name="menuItemType">gets new instance of menu item</param>
+		/// <returns>array of menu items</returns>
 		public MenuItem[] this[Type menuItemType]
 		{
 			get
 			{
 				MenuItem[] orderItems = new MenuItem[0];
-				foreach (var singleCustomerOrder in orderStore)
+				foreach (var singleCustomerOrder in customerOrders)
 				{
 					foreach (var customerOrder in singleCustomerOrder)
 					{
@@ -55,6 +74,23 @@ namespace RestaurantApp3.Classes
 				}
 				return orderItems;
 			}
+		}
+
+		/// <summary>
+		/// method to get customer count
+		/// </summary>
+		/// <returns>customer length</returns>
+		public int GetCustomerLength()
+		{
+			return customerOrders.Length;
+		}
+
+		/// <summary>
+		/// this method cleans all customers orders from main list
+		/// </summary>
+		public void CleanCustomersOrder()
+		{
+			customerOrders = new MenuItem[0][];
 		}
 	}
 }

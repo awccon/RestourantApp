@@ -13,53 +13,74 @@ namespace RestaurantApp3.Classes
 
 	sealed class Chicken : CookableFoods
 	{
-		public override void Serve()
-		{
-		}
-
+		/// <summary>
+		/// this method can responsible for Chicken
+		/// </summary>
+		public override void Serve() { }
+		/// <summary>
+		/// this method can responsible for Chicken 
+		/// </summary>
 		public void CutUp() { }
+		/// <summary>
+		/// this method can responsible for Chicken 
+		/// </summary>
 		public void Cook()
 		{
 			CutUp();
 		}
-
-		public override void Obtain()
-		{
-		}
+		/// <summary>
+		/// this method can responsible for Chicken 
+		/// </summary>
+		public override void Obtain() { }
 	}
+
 	sealed class Egg : CookableFoods, IDisposable
 	{
-		static int counter = 0;
-		int localcounter = 0;
-		public Egg()
-		{
-			counter++;
-			localcounter = counter;
-		}
-
-		public override string ToString()
-		{
-			return this.GetType().Name + " " + localcounter;
-		}
-
+		/// <summary>
+		/// this method responsible for Egg
+		/// </summary>
 		public void Crack() { }
-
+		/// <summary>
+		/// this method responsible for Egg
+		/// </summary>
 		public void Cook()
 		{
 			Crack();
 		}
+		/// <summary>
+		/// this method responsible for Egg
+		/// </summary>
+		private void DiscardShell()
+		{
+
+		}
+		/// <summary>
+		/// this method responsible for Egg
+		/// </summary>
 		public override void Obtain()
 		{
 		}
+		/// <summary>
+		/// this method responsible for Egg
+		/// </summary>
 		public override void Serve()
 		{
 		}
 
+		/// <summary>
+		/// this will clean RAM from instances
+		/// </summary>
 		public void Dispose()
 		{
-			//throw new NotImplementedException();
+			DiscardShell();
 		}
 
-		//~Egg();
+		/// <summary>
+		/// Destructor calls Dispose method to destroy and clean an instances
+		/// </summary>
+		~Egg()
+		{
+			Dispose();
+		}
 	}
 }

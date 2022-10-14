@@ -8,24 +8,26 @@ namespace RestaurantApp3.Classes
 {
 	sealed class Cook
 	{
+		/// <summary>
+		/// method can get item and process them
+		/// </summary>
+		/// <param name="tableRequests">List of customer orders</param>
+		/// <exception cref="Exception">cooking foods completed message</exception>
 		public void Process(TableRequests tableRequests)
 		{
-			var chick = tableRequests[typeof(Chicken)];
+			IMenuItem[] chickenList = tableRequests[typeof(Chicken)];
+			IMenuItem[] eggList = tableRequests[typeof(Egg)];
 
-			var egg = tableRequests[typeof(Egg)];
-
-			foreach (var eggItem in egg)
+			foreach (var EggItem in eggList)
 			{
-				var eg = (Egg)eggItem;
-				eg.Obtain();
-				eg.Cook();
-
+				Egg egg = (Egg)EggItem;
+				egg.Obtain();
+				egg.Cook();
 			}
 
-
-			foreach (var ch in chick)
+			foreach (var ChickenItem in chickenList)
 			{
-				var chicken = (Chicken)ch;
+				Chicken chicken = (Chicken)ChickenItem;
 				chicken.Obtain();
 				chicken.Cook();
 			}

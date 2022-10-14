@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp3.Classes
 {
+	/// <summary>
+	/// Tea, CocaCola, Pepsi
+	/// </summary>
 	public enum drinksList
 	{
 		Tea,
@@ -13,6 +16,10 @@ namespace RestaurantApp3.Classes
 		Pepsi
 	}
 
+	/// <summary>
+	/// Usefull to set the status of order:
+	/// Served, Sent, Ordered
+	/// </summary>
 	public enum orderStatus
 	{
 		Ordered,
@@ -20,101 +27,119 @@ namespace RestaurantApp3.Classes
 		Served
 	}
 
+	/// <summary>
+	/// Server can Receive and order, Send the orders to the cook and Serve the orders to the customers.
+	/// </summary>
 	sealed class Server
 	{
-
-		TableRequests tr = new TableRequests();
-		Cook ck = new Cook();
+		TableRequests tableRequestObject = new TableRequests();
+		Cook cookObject = new Cook();
 		private int customerID = 1;
-		orderStatus status;
+		private orderStatus status;
+
+		/// <summary>
+		/// Receives count of menu items and type of drink
+		/// </summary>
+		/// <param name="chickenCount">integet value</param>
+		/// <param name="eggCount">integet value</param>
+		/// <param name="drink">gets Enum type of drinks</param>
+		/// <exception cref="Exception">throws message when customer count up to 8</exception>
 		public void Receive(int chickenCount, int eggCount, drinksList drink)
 		{
 			if (status != orderStatus.Sent)
 			{
-				if (tr.orderStore.Length < 8)
+				if (tableRequestObject.GetCustomerLength() < 8)
 				{
-					if (chickenCount >= 0 || eggCount >= 0)
+					IMenuItem DrinkItem;
+					for (int i = 0; i < chickenCount; i++)
 					{
-						Drinks item;
-						for (int i = 0; i < chickenCount; i++)
-						{
-							tr.Add(customerID, new Chicken());
-						}
-						for (int i = 0; i < eggCount; i++)
-						{
-							tr.Add(customerID, new Egg());
-						}
-						if (drink == drinksList.Tea)
-						{
-							item = new Tea();
-							tr.Add(customerID, item);
-						}
-						else if (drink == drinksList.CocaCola)
-						{
-							item = new CocaCola();
-							tr.Add(customerID, item);
-						}
-						else
-						{
-							item = new Pepsi();
-							tr.Add(customerID, item);
-						}
-						customerID++;
+						tableRequestObject.Add(customerID, new Chicken());
 					}
+					for (int i = 0; i < eggCount; i++)
+					{
+						tableRequestObject.Add(customerID, new Egg());
+					}
+					if (drink == drinksList.Tea)
+					{
+						DrinkItem = new Tea();
+						tableRequestObject.Add(customerID, DrinkItem);
+					}
+					else if (drink == drinksList.CocaCola)
+					{
+						DrinkItem = new CocaCola();
+						tableRequestObject.Add(customerID, DrinkItem);
+					}
+					else
+					{
+						DrinkItem = new Pepsi();
+						tableRequestObject.Add(customerID, DrinkItem);
+					}
+					customerID++;
 				}
-				else { throw new Exception("Range of customers up to 8"); }
+				else throw new Exception("Range of customers up to 8");
 			}
 			status = orderStatus.Ordered;
 		}
 
+		/// <summary>
+		/// it will call Cook. Cook will obtain all menu items except drinks
+		/// </summary>
+		/// <exception cref="Exception">throws message if order not submitted and when cook completed cooking process</exception>
 		public void Obtain()
 		{
 			if (status == orderStatus.Ordered)
 			{
 				status = orderStatus.Sent;
-				ck.Process(tr);
+				cookObject.Process(tableRequestObject);
 			}
 			else throw new Exception("Please submit an order from the customers");
 		}
 
+		/// <summary>
+		/// this method will get all menu items and serve them to each customer
+		/// </summary>
+		/// <returns>string array of customers order info</returns>
+		/// <exception cref="Exception">throws when order isn't send to the cook</exception>
 		public string[] Serve()
 		{
 			if (status == orderStatus.Sent)
 			{
-				string[] orderResutl = new string[customerID];
+				string[] customerOrdersList = new string[customerID];
 
 				for (int i = 0; i < customerID - 1; i++)
 				{
-					var eachCustomer = tr[i];
+					IMenuItem[] eachCustomer = tableRequestObject[i];
+					IMenuItem? drinkItem = null;
 					int chickenCount = 0, eggCount = 0;
-					string DisposedCount = "";
-					MenuItem drink = null;
 					foreach (var item in eachCustomer)
 					{
 						if (item is Chicken chicken)
 						{
+							chicken.Obtain();
 							chicken.Serve();
 							chickenCount++;
 						}
 						else if (item is Egg egg)
 						{
+							egg.Obtain();
 							egg.Serve();
 							eggCount++;
-							DisposedCount = egg.ToString();
 						}
 						else
 						{
+							item.Obtain();
 							item.Serve();
-							drink = item;
+							drinkItem = item;
 						}
 					}
-					orderResutl[i] = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount} 'Dispose' {DisposedCount}, Drinks: {drink.ToString()}";
+					customerOrdersList[i] = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drinkItem}";
 				}
-				orderResutl[customerID - 1] = "Please enjoy your food!";
+				customerOrdersList[customerID - 1] = "Please enjoy your food!";
+				tableRequestObject.CleanCustomersOrder();
 				customerID = 1;
-				tr.orderStore = new MenuItem[0][];
 				status = orderStatus.Served;
-				return orderResutl;
+				GC.Collect();
+				return customerOrdersList;
 			}
 			else throw new Exception("Please send an orders to the Cook");
 		}
