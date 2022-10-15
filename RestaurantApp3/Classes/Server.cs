@@ -62,6 +62,7 @@ namespace RestaurantApp3.Classes
 					tableRequestObject.Add(customerCount, DrinkItem);
 				}
 			}
+			else throw new Exception("Please serve a current order");
 			status = orderStatus.Ordered;
 		}
 
@@ -94,7 +95,7 @@ namespace RestaurantApp3.Classes
 				for (int i = 0; i < customerCount - 1; i++)
 				{
 					IMenuItem[] eachCustomer = tableRequestObject[i];
-					IMenuItem? drinkItem = null;
+					IMenuItem drinkItem = null;
 					int chickenCount = 0, eggCount = 0;
 					foreach (var item in eachCustomer)
 					{
