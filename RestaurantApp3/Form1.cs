@@ -4,6 +4,8 @@ namespace RestaurantApp3
 {
 	public partial class Form1 : Form
 	{
+		
+
 		Server server = new Server();
 		public Form1()
 		{

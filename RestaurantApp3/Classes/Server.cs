@@ -23,6 +23,7 @@ namespace RestaurantApp3.Classes
 	{
 		TableRequests tableRequestObject = new TableRequests();
 		Cook cookObject = new Cook();
+
 		private orderStatus status;
 
 		/// <summary>
