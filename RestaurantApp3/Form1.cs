@@ -37,7 +37,7 @@ namespace RestaurantApp3
 		{
 			try
 			{
-				server.Obtain();
+				server.SendToCook();
 			}
 			catch (Exception ex)
 			{

@@ -11,7 +11,7 @@ namespace RestaurantApp3.Classes
 	/// </summary>
 	abstract class MenuItem : IMenuItem
 	{
-		public abstract void Obtain();
-		public abstract void Serve();
+		public void Obtain() { }
+		public void Serve() { }
 	}
 }

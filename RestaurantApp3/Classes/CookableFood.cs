@@ -6,17 +6,13 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp3.Classes
 {
-	abstract class CookableFoods : MenuItem
+	abstract class CookableFood : MenuItem
 	{
-
+		public abstract void Cook();
 	}
 
-	sealed class Chicken : CookableFoods
+	sealed class Chicken : CookableFood
 	{
-		/// <summary>
-		/// this method can responsible for Chicken
-		/// </summary>
-		public override void Serve() { }
 		/// <summary>
 		/// this method can responsible for Chicken 
 		/// </summary>
@@ -24,17 +20,13 @@ namespace RestaurantApp3.Classes
 		/// <summary>
 		/// this method can responsible for Chicken 
 		/// </summary>
-		public void Cook()
+		public override void Cook()
 		{
 			CutUp();
 		}
-		/// <summary>
-		/// this method can responsible for Chicken 
-		/// </summary>
-		public override void Obtain() { }
 	}
 
-	sealed class Egg : CookableFoods, IDisposable
+	sealed class Egg : CookableFood, IDisposable
 	{
 		/// <summary>
 		/// this method responsible for Egg
@@ -43,7 +35,7 @@ namespace RestaurantApp3.Classes
 		/// <summary>
 		/// this method responsible for Egg
 		/// </summary>
-		public void Cook()
+		public override void Cook()
 		{
 			Crack();
 		}
@@ -53,18 +45,6 @@ namespace RestaurantApp3.Classes
 		private void DiscardShell()
 		{
 
-		}
-		/// <summary>
-		/// this method responsible for Egg
-		/// </summary>
-		public override void Obtain()
-		{
-		}
-		/// <summary>
-		/// this method responsible for Egg
-		/// </summary>
-		public override void Serve()
-		{
 		}
 
 		/// <summary>

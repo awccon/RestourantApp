@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp3.Classes
 {
-	abstract class Drinks : MenuItem
+	abstract class Drink : MenuItem
 	{
 		public override string ToString()
 		{
@@ -15,57 +15,18 @@ namespace RestaurantApp3.Classes
 
 	}
 
-	sealed class Tea : Drinks
+	sealed class Tea : Drink
 	{
 
-		/// <summary>
-		/// this method responsible for Tea
-		/// </summary>
-		public override void Obtain()
-		{
-		}
-
-
-		/// <summary>
-		/// this method responsible for Tea
-		/// </summary>
-		public override void Serve()
-		{
-		}
 	}
 
-	sealed class CocaCola : Drinks
+	sealed class CocaCola : Drink
 	{
 
-		/// <summary>
-		/// this method responsible for CocaCola
-		/// </summary>
-		public override void Obtain()
-		{
-		}
-
-		/// <summary>
-		/// this method responsible for CocaCola
-		/// </summary>
-		public override void Serve()
-		{
-		}
 	}
 
-	sealed class Pepsi : Drinks
+	sealed class Pepsi : Drink
 	{
-		/// <summary>
-		/// this method responsible for Pepsi
-		/// </summary>
-		public override void Obtain()
-		{
-		}
 
-		/// <summary>
-		/// this method responsible for Pepsi
-		/// </summary>
-		public override void Serve()
-		{
-		}
 	}
 }

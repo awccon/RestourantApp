@@ -17,24 +17,12 @@ namespace RestaurantApp3.Classes
 	}
 
 	/// <summary>
-	/// Usefull to set the status of order:
-	/// Served, Sent, Ordered
-	/// </summary>
-	public enum orderStatus
-	{
-		Ordered,
-		Sent,
-		Served
-	}
-
-	/// <summary>
 	/// Server can Receive and order, Send the orders to the cook and Serve the orders to the customers.
 	/// </summary>
 	sealed class Server
 	{
 		TableRequests tableRequestObject = new TableRequests();
 		Cook cookObject = new Cook();
-		private int customerID = 1;
 		private orderStatus status;
 
 		/// <summary>
@@ -48,35 +36,31 @@ namespace RestaurantApp3.Classes
 		{
 			if (status != orderStatus.Sent)
 			{
-				if (tableRequestObject.GetCustomerLength() < 8)
+				IMenuItem DrinkItem;
+				int customerCount = tableRequestObject.GetCustomerId();
+				for (int i = 0; i < chickenCount; i++)
 				{
-					IMenuItem DrinkItem;
-					for (int i = 0; i < chickenCount; i++)
-					{
-						tableRequestObject.Add(customerID, new Chicken());
-					}
-					for (int i = 0; i < eggCount; i++)
-					{
-						tableRequestObject.Add(customerID, new Egg());
-					}
-					if (drink == drinksList.Tea)
-					{
-						DrinkItem = new Tea();
-						tableRequestObject.Add(customerID, DrinkItem);
-					}
-					else if (drink == drinksList.CocaCola)
-					{
-						DrinkItem = new CocaCola();
-						tableRequestObject.Add(customerID, DrinkItem);
-					}
-					else
-					{
-						DrinkItem = new Pepsi();
-						tableRequestObject.Add(customerID, DrinkItem);
-					}
-					customerID++;
+					tableRequestObject.Add(customerCount, new Chicken());
 				}
-				else throw new Exception("Range of customers up to 8");
+				for (int i = 0; i < eggCount; i++)
+				{
+					tableRequestObject.Add(customerCount, new Egg());
+				}
+				if (drink == drinksList.Tea)
+				{
+					DrinkItem = new Tea();
+					tableRequestObject.Add(customerCount, DrinkItem);
+				}
+				else if (drink == drinksList.CocaCola)
+				{
+					DrinkItem = new CocaCola();
+					tableRequestObject.Add(customerCount, DrinkItem);
+				}
+				else
+				{
+					DrinkItem = new Pepsi();
+					tableRequestObject.Add(customerCount, DrinkItem);
+				}
 			}
 			status = orderStatus.Ordered;
 		}
@@ -85,7 +69,7 @@ namespace RestaurantApp3.Classes
 		/// it will call Cook. Cook will obtain all menu items except drinks
 		/// </summary>
 		/// <exception cref="Exception">throws message if order not submitted and when cook completed cooking process</exception>
-		public void Obtain()
+		public void SendToCook()
 		{
 			if (status == orderStatus.Ordered)
 			{
@@ -104,9 +88,10 @@ namespace RestaurantApp3.Classes
 		{
 			if (status == orderStatus.Sent)
 			{
-				string[] customerOrdersList = new string[customerID];
+				int customerCount = tableRequestObject.GetCustomerId();
+				string[] customerOrdersList = new string[customerCount];
 
-				for (int i = 0; i < customerID - 1; i++)
+				for (int i = 0; i < customerCount - 1; i++)
 				{
 					IMenuItem[] eachCustomer = tableRequestObject[i];
 					IMenuItem? drinkItem = null;
@@ -115,13 +100,11 @@ namespace RestaurantApp3.Classes
 					{
 						if (item is Chicken chicken)
 						{
-							chicken.Obtain();
 							chicken.Serve();
 							chickenCount++;
 						}
 						else if (item is Egg egg)
 						{
-							egg.Obtain();
 							egg.Serve();
 							eggCount++;
 						}
@@ -134,9 +117,8 @@ namespace RestaurantApp3.Classes
 					}
 					customerOrdersList[i] = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drinkItem}";
 				}
-				customerOrdersList[customerID - 1] = "Please enjoy your food!";
+				customerOrdersList[customerCount - 1] = "Please enjoy your food!";
 				tableRequestObject.CleanCustomersOrder();
-				customerID = 1;
 				status = orderStatus.Served;
 				GC.Collect();
 				return customerOrdersList;

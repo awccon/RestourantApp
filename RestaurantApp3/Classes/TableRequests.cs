@@ -7,10 +7,22 @@ using System.Threading.Tasks;
 namespace RestaurantApp3.Classes
 {
 	/// <summary>
+	/// Usefull to set the status of order:
+	/// Served, Sent, Ordered
+	/// </summary>
+	public enum orderStatus
+	{
+		Ordered,
+		Sent,
+		Served
+	}
+
+	/// <summary>
 	/// it can get an orders with method Add, returns an orders with customer id and menu item
 	/// </summary>
 	internal class TableRequests
 	{
+		private int customerID = 1;
 		private MenuItem[][] customerOrders = new MenuItem[0][];
 
 		/// <summary>
@@ -20,6 +32,7 @@ namespace RestaurantApp3.Classes
 		/// <param name="menuItem"></param>
 		public void Add(int customerId, IMenuItem menuItem)
 		{
+
 			MenuItem[] customerMenuItems;
 			if (customerOrders.Length >= customerId)
 			{
@@ -27,7 +40,12 @@ namespace RestaurantApp3.Classes
 			}
 			else
 			{
-				customerMenuItems = new MenuItem[0];
+				if (customerID <= 8)
+				{
+					customerMenuItems = new MenuItem[0];
+					customerID++;
+				}
+				else throw new Exception("Range of customers up to 8");
 			}
 			if (customerOrders.Length != customerId)
 			{
@@ -90,7 +108,13 @@ namespace RestaurantApp3.Classes
 		/// </summary>
 		public void CleanCustomersOrder()
 		{
+			customerID = 1;
 			customerOrders = new MenuItem[0][];
+		}
+
+		public int GetCustomerId()
+		{
+			return customerID;
 		}
 	}
 }
