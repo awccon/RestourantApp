@@ -24,6 +24,7 @@ namespace RestaurantApp3.Classes
 	{
 		private int customerID = 1;
 		private MenuItem[][] customerOrders = new MenuItem[0][];
+		public orderStatus status;
 
 		/// <summary>
 		/// This method gets customer id and type of menu item and saves to array
@@ -33,27 +34,27 @@ namespace RestaurantApp3.Classes
 		public void Add(int customerId, IMenuItem menuItem)
 		{
 			//cr: fix this
-			MenuItem[] customerMenuItems;
-			if (customerOrders.Length >= customerId)
+			if (customerID <= 2)
 			{
-				customerMenuItems = customerOrders[customerId - 1];
-			}
-			else
-			{
-				if (customerID <= 8)
+				MenuItem[] customerMenuItems;
+				if (customerOrders.Length >= customerId)
+				{
+					customerMenuItems = customerOrders[customerId - 1];
+				}
+				else
 				{
 					customerMenuItems = new MenuItem[0];
 					customerID++;
 				}
-				else throw new Exception("Range of customers up to 8");
+				if (customerOrders.Length != customerId)
+				{
+					Array.Resize(ref customerOrders, customerId);
+				}
+				Array.Resize(ref customerMenuItems, customerMenuItems.Length + 1);
+				customerMenuItems[customerMenuItems.Length - 1] = (MenuItem)menuItem;
+				customerOrders[customerId - 1] = customerMenuItems;
 			}
-			if (customerOrders.Length != customerId)
-			{
-				Array.Resize(ref customerOrders, customerId);
-			}
-			Array.Resize(ref customerMenuItems, customerMenuItems.Length + 1);
-			customerMenuItems[customerMenuItems.Length - 1] = (MenuItem)menuItem;
-			customerOrders[customerId - 1] = customerMenuItems;
+			else throw new Exception("Range of customers up to 8");
 		}
 
 		/// <summary>
@@ -94,14 +95,6 @@ namespace RestaurantApp3.Classes
 			}
 		}
 
-		/// <summary>
-		/// method to get customer count
-		/// </summary>
-		/// <returns>customer length</returns>
-		public int GetCustomerLength()
-		{
-			return customerOrders.Length;
-		}
 
 		/// <summary>
 		/// this method cleans all customers orders from main list

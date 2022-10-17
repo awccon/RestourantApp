@@ -25,7 +25,6 @@ namespace RestaurantApp3.Classes
 		Cook cookObject = new Cook();
 
 		//CR: Status should be in TableRequest
-		private orderStatus status;
 
 		/// <summary>
 		/// Receives count of menu items and type of drink
@@ -36,7 +35,7 @@ namespace RestaurantApp3.Classes
 		/// <exception cref="Exception">throws message when customer count up to 8</exception>
 		public void Receive(int chickenCount, int eggCount, drinksList drink)
 		{
-			if (status != orderStatus.Sent)
+			if (tableRequestObject.status != orderStatus.Sent)
 			{
 				IMenuItem DrinkItem;
 				int customerCount = tableRequestObject.GetCustomerId();
@@ -65,7 +64,7 @@ namespace RestaurantApp3.Classes
 				}
 			}
 			else throw new Exception("Please serve a current order");
-			status = orderStatus.Ordered;
+			tableRequestObject.status = orderStatus.Ordered;
 		}
 
 		/// <summary>
@@ -74,9 +73,9 @@ namespace RestaurantApp3.Classes
 		/// <exception cref="Exception">throws message if order not submitted and when cook completed cooking process</exception>
 		public void SendToCook()
 		{
-			if (status == orderStatus.Ordered)
+			if (tableRequestObject.status == orderStatus.Ordered)
 			{
-				status = orderStatus.Sent;
+				tableRequestObject.status = orderStatus.Sent;
 				cookObject.Process(tableRequestObject);
 			}
 			else throw new Exception("Please submit an order from the customers");
@@ -89,7 +88,7 @@ namespace RestaurantApp3.Classes
 		/// <exception cref="Exception">throws when order isn't send to the cook</exception>
 		public string[] Serve()
 		{
-			if (status == orderStatus.Sent)
+			if (tableRequestObject.status == orderStatus.Sent)
 			{
 				int customerCount = tableRequestObject.GetCustomerId();
 				string[] customerOrdersList = new string[customerCount];
@@ -120,7 +119,7 @@ namespace RestaurantApp3.Classes
 				}
 				customerOrdersList[customerCount - 1] = "Please enjoy your food!";
 				tableRequestObject.CleanCustomersOrder();
-				status = orderStatus.Served;
+				tableRequestObject.status = orderStatus.Served;
 				GC.Collect();
 				return customerOrdersList;
 			}
