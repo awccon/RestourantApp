@@ -32,7 +32,7 @@ namespace RestaurantApp3.Classes
 		/// <param name="menuItem"></param>
 		public void Add(int customerId, IMenuItem menuItem)
 		{
-
+			//cr: fix this
 			MenuItem[] customerMenuItems;
 			if (customerOrders.Length >= customerId)
 			{

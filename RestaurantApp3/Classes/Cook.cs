@@ -15,6 +15,7 @@ namespace RestaurantApp3.Classes
 		/// <exception cref="Exception">cooking foods completed message</exception>
 		public void Process(TableRequests tableRequests)
 		{
+			//CR: Can we simplify code in this method?
 			IMenuItem[] chickenList = tableRequests[typeof(Chicken)];
 			IMenuItem[] eggList = tableRequests[typeof(Egg)];
 

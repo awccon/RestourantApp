@@ -15,6 +15,7 @@ namespace RestaurantApp3
 
 		private void receiveBtn_Click(object sender, EventArgs e)
 		{
+			//CR: It should give me an error if enter invalid quantity
 			try
 			{
 				drinksList Drink;

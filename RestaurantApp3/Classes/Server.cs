@@ -24,6 +24,7 @@ namespace RestaurantApp3.Classes
 		TableRequests tableRequestObject = new TableRequests();
 		Cook cookObject = new Cook();
 
+		//CR: Status should be in TableRequest
 		private orderStatus status;
 
 		/// <summary>
@@ -102,20 +103,18 @@ namespace RestaurantApp3.Classes
 					{
 						if (item is Chicken chicken)
 						{
-							chicken.Serve();
 							chickenCount++;
 						}
 						else if (item is Egg egg)
 						{
-							egg.Serve();
 							eggCount++;
 						}
 						else
 						{
 							item.Obtain();
-							item.Serve();
 							drinkItem = item;
 						}
+						item.Serve();
 					}
 					customerOrdersList[i] = $"Customer: {i}, Chicken: {chickenCount}, Egg: {eggCount}, Drinks: {drinkItem}";
 				}
