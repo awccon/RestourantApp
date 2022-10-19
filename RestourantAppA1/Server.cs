@@ -23,4 +23,41 @@ namespace RestourantAppA1
 
 		}
 	}
+
+	public class ChickenOrder
+	{
+		private int quantity { get; set; }
+		public ChickenOrder(int quantity)
+		{
+			this.quantity = quantity;
+		}
+
+		public int GetQuantity()
+		{
+			return quantity;
+		}
+
+		private void CutUp() { }
+
+		public void Cook()
+		{
+			for (int i = 0; i < quantity; i++)
+			{
+				CutUp();
+			}
+		}
+	}
+
+	public class EggOrder
+	{
+		private int quantity { get; set; }
+		public EggOrder(int quantity)
+		{
+			this.quantity = quantity;
+		}
+		public int GetQuantity()
+		{
+			return quantity;
+		}
+	}
 }
