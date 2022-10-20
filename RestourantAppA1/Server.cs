@@ -32,11 +32,7 @@ namespace RestourantAppA1
 			this.quantity = quantity;
 		}
 
-		public int GetQuantity()
-		{
-			return quantity;
-		}
-
+		public int GetQuantity() => quantity;
 		private void CutUp() { }
 
 		public void Cook()
@@ -50,14 +46,18 @@ namespace RestourantAppA1
 
 	public class EggOrder
 	{
+		Random random = new Random();
+
 		private int quantity { get; set; }
 		public EggOrder(int quantity)
 		{
 			this.quantity = quantity;
 		}
-		public int GetQuantity()
-		{
-			return quantity;
-		}
+		public int GetQuantity() => quantity;
+
+		public int GetQuality() => random.Next(101);
+
+		private void Crack() { }
+		private void DiscardShell
 	}
 }
