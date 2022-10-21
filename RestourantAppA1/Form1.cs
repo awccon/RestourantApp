@@ -17,8 +17,9 @@ namespace RestourantAppA1
 			if (ChickenRadio.Checked)
 				menuItem = "Chicken";
 			if (!Int32.TryParse(quantityOfOrder.Text, out quantity) && quantity == 0)
-				throw new Exception("please enter correct quantity");
+				resultBox.Items.Add("please enter correct quantity");
 			newMenu = srv.NewRequest(quantity, menuItem);
+			quantityOfOrder.Text = "";
 		}
 
 		private void CopyPreviousOrder_Click(object sender, EventArgs e)
@@ -26,7 +27,7 @@ namespace RestourantAppA1
 			newMenu = srv.CopyPreviousRequest();
 			try
 			{
-				srv.InspectEgg(newMenu);
+				eggQualityResult.Text = srv.InspectEgg(newMenu);
 			}
 			catch (Exception ex)
 			{
@@ -39,7 +40,7 @@ namespace RestourantAppA1
 			try
 			{
 				resultBox.Items.Add(srv.PrepareFood(newMenu));
-				eggQualityResult.Text = srv.InspectEgg(newMenu).ToString();
+				eggQualityResult.Text = srv.InspectEgg(newMenu);
 			}
 			catch (Exception ex)
 			{
