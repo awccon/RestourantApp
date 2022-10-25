@@ -34,20 +34,17 @@ namespace RestourantAppA1
 			{
 				resultBox.Items.Add(ex.Message);
 			}
+			finally
+			{
+				srv.currentOrder = null;
+			}
 		}
 
 		private void PrepareFood_Click(object sender, EventArgs e)
 		{
-			try
-			{
-				resultBox.Items.Add(srv.PrepareFood(newMenu));
-				eggQualityResult.Text = srv.InspectEgg(newMenu);
-			}
-			catch (Exception ex)
-			{
-				eggQualityResult.Text = ex.Message;
-				resultBox.Items.Add(ex.Message);
-			}
+			eggQualityResult.Text = srv.InspectEgg(newMenu);
+			resultBox.Items.Add(srv.PrepareFood(newMenu));
+			newMenu = null;
 		}
 	}
 }

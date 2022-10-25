@@ -9,21 +9,21 @@ namespace RestourantAppA1
 	internal class Server
 	{
 		public object currentOrder = null;
+		private int newRequestCount = 0;
 		public object NewRequest(int orderQuantity, string orderType)
 		{
 			object menuItem;
-			if (orderType == "Chicken")
+			if (newRequestCount % 3 == 0)
 			{
-				menuItem = new ChickenOrder(orderQuantity);
-				currentOrder = menuItem;
-				return menuItem;
+				menuItem = (orderType == "Chicken") ? new ChickenOrder(orderQuantity) : new EggOrder(orderQuantity);
 			}
 			else
 			{
-				menuItem = new EggOrder(orderQuantity);
-				currentOrder = menuItem;
-				return menuItem;
+				menuItem = (orderType == "Chicken") ? new EggOrder(orderQuantity) : new ChickenOrder(orderQuantity);
 			}
+			currentOrder = menuItem;
+			++newRequestCount;
+			return menuItem;
 		}
 
 		public object? CopyPreviousRequest()
