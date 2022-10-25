@@ -32,7 +32,7 @@ namespace RestourantAppA1
 			string menuItem;
 			if (currentOrder == null)
 				throw new Exception("There is not previous orders to copy");
-			if(currentOrder is ChickenOrder chickenObj)
+			if (currentOrder is ChickenOrder chickenObj)
 			{
 				quantity = chickenObj.GetQuantity();
 				menuItem = chickenObj.GetType().Name;
@@ -70,12 +70,9 @@ namespace RestourantAppA1
 			else
 			{
 				var egg = menuItem as EggOrder;
-
 				if (egg.GetQuality() == null)
-					throw new Exception("Employee forgot to check for quality");
-				if (egg.GetQuality() < 25)
-					throw new Exception("The Egg rotten");
-				return egg.GetQuality().ToString();
+					return "Employee forgot to check for quality";
+				return (egg.GetQuality() > 25) ? egg.GetQuality().ToString() : "The Egg rotten";
 			}
 		}
 	}
@@ -102,9 +99,8 @@ namespace RestourantAppA1
 
 	public class EggOrder
 	{
-		Random random = new Random();
+		private int random = new Random().Next(101);
 		private int quantity { get; set; }
-		
 		private static int eggInstanceCount = 0;
 		public EggOrder(int quantity)
 		{
@@ -115,22 +111,11 @@ namespace RestourantAppA1
 
 		public int? GetQuality()
 		{
-			int? singleEggQuality = null;
-
-			if ((eggInstanceCount % 2) == 1)
-			{
-				singleEggQuality = random.Next(101);
-			}
-
-			return singleEggQuality;
+			return (eggInstanceCount % 2 == 0) ? random : null;
 		}
 
 		private void Crack()
 		{
-			if (GetQuality() < 25)
-				eggQuality = "Egg is rotten";
-			if (GetQuality() == null)
-				eggQuality = "Employee forgot to check for quality";
 		}
 		private void DiscardShell() { }
 		public void Cook()

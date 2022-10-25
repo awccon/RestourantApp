@@ -24,14 +24,15 @@ namespace RestourantAppA1
 
 		private void CopyPreviousOrder_Click(object sender, EventArgs e)
 		{
-			newMenu = srv.CopyPreviousRequest();
+
 			try
 			{
+				newMenu = srv.CopyPreviousRequest();
 				eggQualityResult.Text = srv.InspectEgg(newMenu);
 			}
 			catch (Exception ex)
 			{
-				eggQualityResult.Text = ex.Message;
+				resultBox.Items.Add(ex.Message);
 			}
 		}
 
@@ -44,6 +45,7 @@ namespace RestourantAppA1
 			}
 			catch (Exception ex)
 			{
+				eggQualityResult.Text = ex.Message;
 				resultBox.Items.Add(ex.Message);
 			}
 		}
