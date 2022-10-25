@@ -24,7 +24,6 @@ namespace RestourantAppA1
 
 		private void CopyPreviousOrder_Click(object sender, EventArgs e)
 		{
-
 			try
 			{
 				newMenu = srv.CopyPreviousRequest();
