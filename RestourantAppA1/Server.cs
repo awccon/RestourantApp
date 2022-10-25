@@ -104,7 +104,7 @@ namespace RestourantAppA1
 	{
 		Random random = new Random();
 		private int quantity { get; set; }
-		private string eggQuality;
+		
 		private static int eggInstanceCount = 0;
 		public EggOrder(int quantity)
 		{
