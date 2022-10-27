@@ -63,7 +63,7 @@ namespace RestourantAppA1
 			return food;
 		}
 
-		public string InspectEgg(object menuItem)
+		public string? InspectEgg(object menuItem)
 		{
 			if (menuItem is ChickenOrder)
 				return "No inspection required";
