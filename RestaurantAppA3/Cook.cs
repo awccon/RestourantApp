@@ -8,5 +8,10 @@ namespace RestaurantAppA3
 {
 	internal class Cook
 	{
+		public void Process(TableRequest currentTable)
+		{
+			var chicken = currentTable[];
+			
+		}
 	}
 }

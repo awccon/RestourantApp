@@ -34,7 +34,7 @@ namespace RestaurantAppA3
 			}
 		}
 
-		public IMenuItem[] this[IMenuItem itemType]
+		public IMenuItem[] this[Type type]
 		{
 			get
 			{
@@ -44,12 +44,16 @@ namespace RestaurantAppA3
 				{
 					foreach (var item in eachCustomerOrder)
 					{
-						itemType = (MenuItem)itemType;
-						if (item.GetType() == itemType.GetType())
+						if (type.IsAssignableFrom(typeof(MenuItem)))
 						{
-							Array.Resize(ref items, items.Length + 1);
-							items[items.Length - 1] = item;
+
 						}
+						//itemType = (MenuItem)itemType;
+						//if (item.GetType() == itemType.GetType())
+						//{
+						//	Array.Resize(ref items, items.Length + 1);
+						//	items[items.Length - 1] = item;
+						//}
 					}
 				}
 				return items;

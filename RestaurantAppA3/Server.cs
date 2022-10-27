@@ -9,6 +9,7 @@ namespace RestaurantAppA3
 	internal class Server
 	{
 		TableRequest newTable = new TableRequest();
+		Cook chefCook = new Cook();
 		public void GetNewOrder(int chickenCount, int eggCount, Drinks drink)
 		{
 			for (int i = 0; i <= chickenCount; i++)
@@ -32,6 +33,11 @@ namespace RestaurantAppA3
 					break;
 			}
 			newTable.clientNuber++;
+		}
+
+		public void SendToCook()
+		{
+			chefCook.Process(newTable);
 		}
 
 		public void PrepareFood()

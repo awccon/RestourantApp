@@ -74,7 +74,10 @@ namespace RestaurantAppA3
 	sealed class Egg : CookableFood, IDisposable
 	{
 		private void crack() { }
-		private void discardShell() { }
+		private void discardShell()
+		{
+			Dispose();
+		}
 		public override void Cook()
 		{
 			crack();
@@ -87,7 +90,7 @@ namespace RestaurantAppA3
 
 		~Egg()
 		{
-			Dispose();
+			discardShell();
 		}
 	}
 
