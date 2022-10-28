@@ -10,14 +10,14 @@ namespace RestaurantAppA3
 	{
 		TableRequest newTable = new TableRequest();
 		Cook chefCook = new Cook();
-
+		
 		/// <summary>
 		/// Submit new order, gets Chicken and Egg quantity and type of drink
 		/// </summary>
 		/// <param name="chickenCount">type integet count of item</param>
 		/// <param name="eggCount">type integet count of item</param>
 		/// <param name="drink">type Enum drink item</param>
-		public void GetNewOrder(int chickenCount, int eggCount, Drinks drink)
+		public void GetNewOrder(int chickenCount, int eggCount, listOfDrinks drink)
 		{
 			for (int i = 0; i <= chickenCount; i++)
 			{
@@ -29,13 +29,13 @@ namespace RestaurantAppA3
 			}
 			switch (drink)
 			{
-				case Drinks.Tea:
+				case listOfDrinks.Tea:
 					newTable.Add(newTable.getClientId, new Tea());
 					break;
-				case Drinks.CocaCola:
+				case listOfDrinks.CocaCola:
 					newTable.Add(newTable.getClientId, new CocaCola());
 					break;
-				case Drinks.Pepsi:
+				case listOfDrinks.Pepsi:
 					newTable.Add(newTable.getClientId, new Pepsi());
 					break;
 			}

@@ -10,7 +10,7 @@ namespace RestaurantAppA3
 	/// <summary>
 	/// Drinks list
 	/// </summary>
-	public enum Drinks
+	public enum listOfDrinks
 	{
 		Tea,
 		CocaCola,
