@@ -10,29 +10,36 @@ namespace RestaurantAppA3
 	{
 		TableRequest newTable = new TableRequest();
 		Cook chefCook = new Cook();
+
+		/// <summary>
+		/// Submit new order, gets Chicken and Egg quantity and type of drink
+		/// </summary>
+		/// <param name="chickenCount">type integet count of item</param>
+		/// <param name="eggCount">type integet count of item</param>
+		/// <param name="drink">type Enum drink item</param>
 		public void GetNewOrder(int chickenCount, int eggCount, Drinks drink)
 		{
 			for (int i = 0; i <= chickenCount; i++)
 			{
-				newTable.Add(newTable.clientNuber, new Chicken());
+				newTable.Add(newTable.getClientId, new Chicken());
 			}
 			for (int i = 0; i < eggCount; i++)
 			{
-				newTable.Add(newTable.clientNuber, new Egg());
+				newTable.Add(newTable.getClientId, new Egg());
 			}
 			switch (drink)
 			{
 				case Drinks.Tea:
-					newTable.Add(newTable.clientNuber, new Tea());
+					newTable.Add(newTable.getClientId, new Tea());
 					break;
 				case Drinks.CocaCola:
-					newTable.Add(newTable.clientNuber, new CocaCola());
+					newTable.Add(newTable.getClientId, new CocaCola());
 					break;
 				case Drinks.Pepsi:
-					newTable.Add(newTable.clientNuber, new Pepsi());
+					newTable.Add(newTable.getClientId, new Pepsi());
 					break;
 			}
-			newTable.clientNuber++;
+			newTable.clientNumber++;
 		}
 
 		public void SendToCook()
@@ -40,13 +47,32 @@ namespace RestaurantAppA3
 			chefCook.Process(newTable);
 		}
 
-		public void PrepareFood()
+		public string[] PrepareFood()
 		{
-			var chicken = newTable[new Chicken()];
-			var egg = newTable[new Egg()];
-			var drink = newTable[new Tea()];
-			var drink2 = newTable[new CocaCola()];
-			var drink3 = newTable[new Pepsi()];
+			string[] customerOrderList = new string[0];
+			for (int i = 0; i < newTable.getTableLength; i++)
+			{
+				int chickenCount = 0;
+				int eggCount = 0;
+				IMenuItem drink = null;
+				foreach (var item in newTable[i])
+				{
+					if (item is Chicken)
+					{
+						chickenCount++;
+					}
+					else if (item is Egg)
+					{
+						eggCount++;
+					}
+					else drink = item;
+					item.Obtain();
+					item.Serve();
+				}
+				Array.Resize(ref customerOrderList, customerOrderList.Length + 1);
+				customerOrderList[i] = $"Customer: {i}, Chicken {chickenCount}, Egg {eggCount}, Drink {drink}";
+			}
+			return customerOrderList;
 		}
 	}
 }

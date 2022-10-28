@@ -10,8 +10,28 @@ namespace RestaurantAppA3
 	{
 		public void Process(TableRequest currentTable)
 		{
-			var chicken = currentTable[];
-			
+			var chickenObjList = currentTable[new Chicken()];
+			var eggObjList = currentTable[new Egg()];
+			CookProcess(chickenObjList);
+			CookProcess(eggObjList);
+		}
+
+		private void CookProcess(Array itemList)
+		{
+			foreach (var item in itemList)
+			{
+				if (item is Chicken chicken)
+				{
+					chicken.Obtain();
+					chicken.Cook();
+				}
+				else
+				{
+					var egg = item as Egg;
+					egg.Obtain();
+					egg.Cook();
+				}
+			}
 		}
 	}
 }

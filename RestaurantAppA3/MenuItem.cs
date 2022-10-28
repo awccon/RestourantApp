@@ -46,6 +46,10 @@ namespace RestaurantAppA3
 	/// </summary>
 	abstract class Drink : MenuItem
 	{
+		public override string ToString()
+		{
+			return this.GetType().Name;
+		}
 		public override void Obtain()
 		{
 		}
