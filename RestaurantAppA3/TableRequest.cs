@@ -9,21 +9,20 @@ namespace RestaurantAppA3
 	internal class TableRequest
 	{
 		IMenuItem[][] table = new MenuItem[0][];
-		public int clientNumber = 1;
+
 		public void Add(int customerId, IMenuItem menutype)
 		{
 			if (customerId > 8)
 				throw new Exception("Range of customers up to 8, you cannot submit another order");
 			if (table.Length == customerId)
 			{
-				customerId = customerId - 1;
-				Array.Resize(ref table[customerId], table[customerId].Length + 1);
-				table[customerId][table[customerId].Length - 1] = menutype;
+				Array.Resize(ref table[customerId - 1], table[customerId - 1].Length + 1);
+				table[customerId][table[customerId - 1].Length - 1] = menutype;
 			}
 			else
 			{
 				Array.Resize(ref table, table.Length + 1);
-				IMenuItem[] newOrder = new MenuItem[0];
+				IMenuItem[] newOrder = new IMenuItem[1] { menutype };
 				table[table.Length - 1] = newOrder;
 			}
 		}
@@ -36,7 +35,7 @@ namespace RestaurantAppA3
 			}
 		}
 
-		public IMenuItem[] this[IMenuItem itemType]
+		public IMenuItem[] this[Type itemType]
 		{
 			get
 			{
@@ -46,8 +45,8 @@ namespace RestaurantAppA3
 				{
 					foreach (var item in eachCustomerOrder)
 					{
-						itemType = (MenuItem)itemType;
-						if (item.GetType() == itemType.GetType())
+
+						if (itemType.IsAssignableFrom(item.GetType()))
 						{
 							Array.Resize(ref items, items.Length + 1);
 							items[items.Length - 1] = item;
@@ -58,13 +57,6 @@ namespace RestaurantAppA3
 			}
 		}
 
-		public int getClientId
-		{
-			get
-			{
-				return clientNumber;
-			}
-		}
 		public int getTableLength
 		{
 			get { return table.Length; }

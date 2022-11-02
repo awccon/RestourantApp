@@ -10,7 +10,7 @@ namespace RestaurantAppA3
 	{
 		TableRequest newTable = new TableRequest();
 		Cook chefCook = new Cook();
-		
+
 		/// <summary>
 		/// Submit new order, gets Chicken and Egg quantity and type of drink
 		/// </summary>
@@ -19,27 +19,28 @@ namespace RestaurantAppA3
 		/// <param name="drink">type Enum drink item</param>
 		public void GetNewOrder(int chickenCount, int eggCount, listOfDrinks drink)
 		{
-			for (int i = 0; i <= chickenCount; i++)
+			int clientCount = newTable.getTableLength + 1;
+			for (int i = 0; i < chickenCount; i++)
 			{
-				newTable.Add(newTable.getClientId, new Chicken());
+				newTable.Add(clientCount, new Chicken());
 			}
 			for (int i = 0; i < eggCount; i++)
 			{
-				newTable.Add(newTable.getClientId, new Egg());
+				newTable.Add(clientCount, new Egg());
 			}
 			switch (drink)
 			{
 				case listOfDrinks.Tea:
-					newTable.Add(newTable.getClientId, new Tea());
+					newTable.Add(clientCount, new Tea());
 					break;
 				case listOfDrinks.CocaCola:
-					newTable.Add(newTable.getClientId, new CocaCola());
+					newTable.Add(clientCount, new CocaCola());
 					break;
 				case listOfDrinks.Pepsi:
-					newTable.Add(newTable.getClientId, new Pepsi());
+					newTable.Add(clientCount, new Pepsi());
 					break;
 			}
-			newTable.clientNumber++;
+			//newTable.clientNumber++;
 		}
 
 		public void SendToCook()
