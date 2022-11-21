@@ -40,7 +40,6 @@ namespace RestaurantAppA3
 					newTable.Add(clientCount, new Pepsi());
 					break;
 			}
-			//newTable.clientNumber++;
 		}
 
 		public void SendToCook()
@@ -56,7 +55,7 @@ namespace RestaurantAppA3
 				int chickenCount = 0;
 				int eggCount = 0;
 				IMenuItem drink = null;
-				foreach (var item in newTable[i])
+				foreach (CookableFood item in newTable[i])
 				{
 					if (item is Chicken)
 					{

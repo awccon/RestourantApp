@@ -10,34 +10,19 @@ namespace RestaurantAppA3
 	{
 		public void Process(TableRequest currentTable)
 		{
-			var CookableItems = currentTable[typeof(CookableFood)];
+			//var CookableItems = currentTable[typeof(CookableFood)];
 
-			foreach (CookableFood item in CookableItems)
+			//foreach (CookableFood item in CookableItems)
+			//{
+			//	item.Obtain();
+			//	item.Cook();
+			//}
+
+			foreach (CookableFood item in currentTable[typeof(CookableFood)])
 			{
 				item.Obtain();
 				item.Cook();
 			}
-
-			//CookProcess(CookableItems);
 		}
-
-		//private void CookProcess(Array itemList)
-		//{
-		//	foreach (var item in itemList)
-		//	{
-		//		if (item is Chicken chicken)
-		//		{
-		//			chicken.Obtain();
-		//			chicken.Cook();
-		//		}
-		//		else
-		//		{
-		//			var egg = item as Egg;
-		//			egg.Obtain();
-		//			egg.Cook();
-		//		}
-		//		item.
-		//	}
-		//}
 	}
 }

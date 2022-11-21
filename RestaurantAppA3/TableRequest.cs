@@ -40,12 +40,10 @@ namespace RestaurantAppA3
 			get
 			{
 				IMenuItem[] items = new MenuItem[0];
-
 				foreach (var eachCustomerOrder in table)
 				{
 					foreach (var item in eachCustomerOrder)
 					{
-
 						if (itemType.IsAssignableFrom(item.GetType()))
 						{
 							Array.Resize(ref items, items.Length + 1);
