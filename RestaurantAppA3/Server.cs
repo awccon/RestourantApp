@@ -55,7 +55,7 @@ namespace RestaurantAppA3
 				int chickenCount = 0;
 				int eggCount = 0;
 				IMenuItem drink = null;
-				foreach (CookableFood item in newTable[i])
+				foreach (var item in newTable[i])
 				{
 					if (item is Chicken)
 					{

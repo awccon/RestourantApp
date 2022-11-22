@@ -17,7 +17,7 @@ namespace RestaurantAppA3
 			if (table.Length == customerId)
 			{
 				Array.Resize(ref table[customerId - 1], table[customerId - 1].Length + 1);
-				table[customerId][table[customerId - 1].Length - 1] = menutype;
+				table[customerId-1][table[customerId - 1].Length - 1] = menutype;
 			}
 			else
 			{
