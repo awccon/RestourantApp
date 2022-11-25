@@ -12,19 +12,15 @@ namespace RestaurantApp4
 		TableRequest newTable = new TableRequest();
 		Cook chefCook = new Cook();
 
-		public void SubmitNewOrder(listOfDrinks item, string Name, listOfDrinks drink)
+		public void SubmitNewOrder(int ChickenCount, int EggCount, string Name, listOfDrinks drink)
 		{
-			switch (item)
+			for (int i = 0; i < ChickenCount; i++)
 			{
-				case listOfDrinks.:
-					newTable.Add<Tea>(Name);
-					break;
-				case listOfDrinks.CocaCola:
-					newTable.Add<CocaCola>(Name);
-					break;
-				case listOfDrinks.Pepsi:
-					newTable.Add<Pepsi>(Name);
-					break;
+				newTable.Add<Chicken>(Name);
+			}
+			for (int i = 0; i < EggCount; i++)
+			{
+				newTable.Add<Egg>(Name);
 			}
 			switch (drink)
 			{
@@ -39,6 +35,18 @@ namespace RestaurantApp4
 					break;
 			}
 		}
+
+		public void TableTest()
+		{
+			var singleCustomerOrders = newTable.Get<CookableFood>();
+			foreach (CookableFood item in singleCustomerOrders)
+			{
+				item.Obtain();
+				item.Cook();
+				item.Serve();
+			}
+		}
+
 		/// <summary>
 		/// Submit new order, gets Chicken and Egg quantity and type of drink
 		/// </summary>

@@ -6,15 +6,19 @@ namespace RestaurantApp4
 		public Form1()
 		{
 			InitializeComponent();
-			server.SubmitNewOrder(new Chicken(), "Akmal", listOfDrinks.Tea);
-			server.SubmitNewOrder(new Chicken(), "Behruz", listOfDrinks.CocaCola);
-			server.SubmitNewOrder(new Egg(), "Akmal", listOfDrinks.Tea);
-			server.SubmitNewOrder(new Chicken(), "Akmal", listOfDrinks.Pepsi);
-			server.SubmitNewOrder(new Egg(), "Scott", listOfDrinks.CocaCola);
-			server.SubmitNewOrder(new Chicken(), "Abbos", listOfDrinks.Tea);
-			server.SubmitNewOrder(new Egg(), "Dilshod", listOfDrinks.Pepsi);
-			server.SubmitNewOrder(new Chicken(), "Akmal", listOfDrinks.Tea);
+			server.SubmitNewOrder(1, 2, "Akmal", listOfDrinks.Tea);
+			server.SubmitNewOrder(1, 2, "Behruz", listOfDrinks.CocaCola);
+			server.SubmitNewOrder(1, 2, "Akmal", listOfDrinks.Tea);
+			server.SubmitNewOrder(1, 2, "Behruz", listOfDrinks.Pepsi);
+			server.SubmitNewOrder(1, 2, "Scott", listOfDrinks.CocaCola);
+			server.SubmitNewOrder(1, 2, "Abbos", listOfDrinks.Tea);
+			server.SubmitNewOrder(1, 2, "Dilshod", listOfDrinks.Pepsi);
+			server.SubmitNewOrder(1, 2, "Akmal", listOfDrinks.Tea);
+			server.SubmitNewOrder(1, 2, "Doniyor", listOfDrinks.Tea);
+			server.SubmitNewOrder(1, 2, "Glenn", listOfDrinks.Tea);
+			server.SubmitNewOrder(1, 2, "Muhammad", listOfDrinks.Tea);
 
+			server.TableTest();
 		}
 	}
 }

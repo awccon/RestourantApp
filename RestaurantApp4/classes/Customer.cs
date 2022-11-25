@@ -8,13 +8,13 @@ namespace RestaurantApp4.classes
 {
 	internal class Customer
 	{
-		public int customerID = 0;
-		public string NameOfCustomer { get; set; }
+		public static int customerID = 0;
+		public string CustomerName { get; set; }
 		public List<IMenuItem> MenuOrder = new List<IMenuItem>();
 
 		public Customer(IMenuItem item)
 		{
-			customerID++;
+			customerID = customerID + 1;
 			MenuOrder.Add(item);
 		}
 	}
