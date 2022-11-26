@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace RestaurantApp4
 {
 	public partial class Form1 : Form
@@ -6,19 +8,35 @@ namespace RestaurantApp4
 		public Form1()
 		{
 			InitializeComponent();
-			server.SubmitNewOrder(1, 2, "Akmal", listOfDrinks.Tea);
-			server.SubmitNewOrder(1, 2, "Behruz", listOfDrinks.CocaCola);
-			server.SubmitNewOrder(1, 2, "Akmal", listOfDrinks.Tea);
-			server.SubmitNewOrder(1, 2, "Behruz", listOfDrinks.Pepsi);
-			server.SubmitNewOrder(1, 2, "Scott", listOfDrinks.CocaCola);
-			server.SubmitNewOrder(1, 2, "Abbos", listOfDrinks.Tea);
-			server.SubmitNewOrder(1, 2, "Dilshod", listOfDrinks.Pepsi);
-			server.SubmitNewOrder(1, 2, "Akmal", listOfDrinks.Tea);
-			server.SubmitNewOrder(1, 2, "Doniyor", listOfDrinks.Tea);
-			server.SubmitNewOrder(1, 2, "Glenn", listOfDrinks.Tea);
-			server.SubmitNewOrder(1, 2, "Muhammad", listOfDrinks.Tea);
+		}
 
-			server.TableTest();
+		
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			server.SubmitNewOrder(int.Parse(txtChickenCount.Text), int.Parse(txtEggCount.Text), txtClientName.Text, listOfDrinks.Tea);
+			txtChickenCount.Text = txtEggCount.Text = txtClientName.Text = "";
+		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			showOrder();
+		}
+
+		private void button3_Click(object sender, EventArgs e)
+		{
+			listBox1.DataSource = null;
+			listBox1.DataSource = server.PrepareFood();
+		}
+
+		public async void showOrder()
+		{
+			listBox1.Items.Add("Server start serving drinks first......");
+			await Task.Delay(3000);
+			listBox1.DataSource = server.ServeDrinks();
+			await Task.Delay(9000);
+			listBox1.DataSource = null;
+			listBox1.Items.Add("Cook received foods and preparing it.....");
 		}
 	}
 }

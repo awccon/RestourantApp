@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantApp4.classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,13 @@ namespace RestaurantApp4
 		TableRequest newTable = new TableRequest();
 		Cook chefCook = new Cook();
 
+		/// <summary>
+		/// Submit new client orders
+		/// </summary>
+		/// <param name="ChickenCount"></param>
+		/// <param name="EggCount"></param>
+		/// <param name="Name"></param>
+		/// <param name="drink"></param>
 		public void SubmitNewOrder(int ChickenCount, int EggCount, string Name, listOfDrinks drink)
 		{
 			for (int i = 0; i < ChickenCount; i++)
@@ -36,79 +44,67 @@ namespace RestaurantApp4
 			}
 		}
 
-		public void TableTest()
-		{
-			var singleCustomerOrders = newTable.Get<CookableFood>();
-			foreach (CookableFood item in singleCustomerOrders)
-			{
-				item.Obtain();
-				item.Cook();
-				item.Serve();
-			}
-		}
-
 		/// <summary>
-		/// Submit new order, gets Chicken and Egg quantity and type of drink
+		/// Serve drinks first
 		/// </summary>
-		/// <param name="chickenCount">type integet count of item</param>
-		/// <param name="eggCount">type integet count of item</param>
-		/// <param name="drink">type Enum drink item</param>
-		//public void GetNewOrder(int chickenCount, int eggCount, listOfDrinks drink)
-		//{
-		//	int clientCount = newTable.getTableLength + 1;
-		//	for (int i = 0; i < chickenCount; i++)
-		//	{
-		//		newTable.Add(clientCount, new Chicken());
-		//	}
-		//	for (int i = 0; i < eggCount; i++)
-		//	{
-		//		newTable.Add(clientCount, new Egg());
-		//	}
-		//	switch (drink)
-		//	{
-		//		case listOfDrinks.Tea:
-		//			newTable.Add(clientCount, new Tea());
-		//			break;
-		//		case listOfDrinks.CocaCola:
-		//			newTable.Add(clientCount, new CocaCola());
-		//			break;
-		//		case listOfDrinks.Pepsi:
-		//			newTable.Add(clientCount, new Pepsi());
-		//			break;
-		//	}
-		//}
+		/// <returns></returns>
+		public List<string> ServeDrinks()
+		{
+			List<string> ClientDrinks = new List<string>();
+			foreach (var item in newTable)
+			{
+				Drink drinkItem = null;
+				foreach (var menuItem in item.MenuOrder)
+				{
+					if (menuItem is Drink drink)
+					{
+						drink.Obtain();
+						drink.Serve();
+						drinkItem = drink;
+					}
+				}
+				ClientDrinks.Add($"Client: {item.CustomerName}, Drink: {drinkItem}");
+			}
+			return ClientDrinks;
+		}
 
 		//public void SendToCook()
 		//{
 		//	chefCook.Process(newTable);
 		//}
 
-		//public string[] PrepareFood()
-		//{
-		//	string[] customerOrderList = new string[0];
-		//	for (int i = 0; i < newTable.getTableLength; i++)
-		//	{
-		//		int chickenCount = 0;
-		//		int eggCount = 0;
-		//		IMenuItem drink = null;
-		//		foreach (var item in newTable[i])
-		//		{
-		//			if (item is Chicken)
-		//			{
-		//				chickenCount++;
-		//			}
-		//			else if (item is Egg)
-		//			{
-		//				eggCount++;
-		//			}
-		//			else drink = item;
-		//			item.Obtain();
-		//			item.Serve();
-		//		}
-		//		Array.Resize(ref customerOrderList, customerOrderList.Length + 1);
-		//		customerOrderList[i] = $"Customer: {i}, Chicken {chickenCount}, Egg {eggCount}, Drink {drink}";
-		//	}
-		//	return customerOrderList;
-		//}
+		/// <summary>
+		/// Prepares foods to each customer
+		/// </summary>
+		/// <returns></returns>
+		public List<string> PrepareFood()
+		{
+			List<string> customerOrderList = new List<string>();
+			foreach (var singleCustomer in newTable)
+			{
+				int chickenCount = 0;
+				int eggCount = 0;
+				foreach (var item in singleCustomer.MenuOrder)
+				{
+					if (item is CookableFood food)
+					{
+						if (food is Chicken)
+						{
+							food.Obtain();
+							chickenCount++;
+						}
+						else
+						{
+							var egg = food as Egg;
+							food.Obtain();
+							eggCount++;
+						}
+						food.Serve();
+					}
+				}
+				customerOrderList.Add($"Customer: {singleCustomer.CustomerName}, Chicken {chickenCount}, Egg {eggCount}");
+			}
+			return customerOrderList;
+		}
 	}
 }

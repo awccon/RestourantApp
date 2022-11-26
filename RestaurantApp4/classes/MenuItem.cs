@@ -22,6 +22,7 @@ namespace RestaurantApp4
 	/// </summary>
 	abstract class MenuItem : IMenuItem
 	{
+
 		public abstract void Obtain();
 
 		public abstract void Serve();
