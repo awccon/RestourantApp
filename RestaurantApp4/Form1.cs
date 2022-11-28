@@ -5,12 +5,13 @@ namespace RestaurantApp4
 	public partial class Form1 : Form
 	{
 		Server server = new Server();
+
 		public Form1()
 		{
 			InitializeComponent();
 		}
 
-		
+
 
 		private void button1_Click(object sender, EventArgs e)
 		{
@@ -20,13 +21,21 @@ namespace RestaurantApp4
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-			showOrder();
+			try
+			{
+				showOrder();
+			}
+			catch (Exception ex)
+			{
+				listBox1.DataSource = null;
+				listBox1.Items.Add(ex.Message);
+			}
 		}
 
 		private void button3_Click(object sender, EventArgs e)
 		{
 			listBox1.DataSource = null;
-			listBox1.DataSource = server.PrepareFood();
+			listBox1.DataSource = server.PrepareFood(txtClientName.Text);
 		}
 
 		public async void showOrder()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,21 +9,19 @@ namespace RestaurantApp4
 {
 	internal class Cook
 	{
-		//public void Process(TableRequest currentTable)
-		//{
-		//	//var CookableItems = currentTable[typeof(CookableFood)];
+		public delegate void CookingProcessEvent();
+		public event CookingProcessEvent? OnProcessFinished;
 
-		//	//foreach (CookableFood item in CookableItems)
-		//	//{
-		//	//	item.Obtain();
-		//	//	item.Cook();
-		//	//}
+		public void Process(TableRequest currentTable)
+		{
+			var CookableItems = currentTable.Get<CookableFood>();
 
-		//	foreach (CookableFood item in currentTable[typeof(CookableFood)])
-		//	{
-		//		item.Obtain();
-		//		item.Cook();
-		//	}
-		//}
+			foreach (CookableFood item in CookableItems)
+			{
+				item.Obtain();
+				item.Cook();
+			}
+			OnProcessFinished?.Invoke();
+		}
 	}
 }

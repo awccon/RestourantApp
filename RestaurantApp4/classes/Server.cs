@@ -13,6 +13,15 @@ namespace RestaurantApp4
 		TableRequest newTable = new TableRequest();
 		Cook chefCook = new Cook();
 
+		public delegate void ReadyEvent(TableRequest table);
+		public event ReadyEvent OnSubmitEvent;
+
+		public Server()
+		{
+			this.OnSubmitEvent += table => chefCook.Process(table);
+			this.chefCook.OnProcessFinished += OnCookProcessedCooking;
+		}
+
 		/// <summary>
 		/// Submit new client orders
 		/// </summary>
@@ -65,7 +74,14 @@ namespace RestaurantApp4
 				}
 				ClientDrinks.Add($"Client: {item.CustomerName}, Drink: {drinkItem}");
 			}
+			OnSubmitEvent?.Invoke(newTable);
 			return ClientDrinks;
+		}
+
+
+		public void OnCookProcessedCooking()
+		{
+
 		}
 
 		//public void SendToCook()
@@ -77,16 +93,48 @@ namespace RestaurantApp4
 		/// Prepares foods to each customer
 		/// </summary>
 		/// <returns></returns>
-		public List<string> PrepareFood()
+		public List<string> PrepareFood(string Name)
 		{
-			List<string> customerOrderList = new List<string>();
-			foreach (var singleCustomer in newTable)
+			if (Name.Trim() == "")
 			{
+				List<string> customerOrderList = new List<string>();
+				foreach (var singleCustomer in newTable)
+				{
+					int chickenCount = 0;
+					int eggCount = 0;
+					foreach (var item in singleCustomer.MenuOrder)
+					{
+						if (item is CookableFood food)
+						{
+							if (food is Chicken)
+							{
+								food.Obtain();
+								chickenCount++;
+							}
+							else
+							{
+								var egg = food as Egg;
+								food.Obtain();
+								eggCount++;
+							}
+							food.Serve();
+						}
+					}
+					customerOrderList.Add($"Customer: {singleCustomer.CustomerName}, Chicken {chickenCount}, Egg {eggCount}");
+				}
+				return customerOrderList;
+			}
+			else
+			{
+				List<string> customerOrderList = new List<string>();
+				//List<IMenuItem> items = newTable[Name];
 				int chickenCount = 0;
 				int eggCount = 0;
-				foreach (var item in singleCustomer.MenuOrder)
+				foreach (var singleCustomer in newTable[Name])
 				{
-					if (item is CookableFood food)
+					//foreach (var item in singleCustomer)
+					//{
+					if (singleCustomer is CookableFood food)
 					{
 						if (food is Chicken)
 						{
@@ -101,10 +149,11 @@ namespace RestaurantApp4
 						}
 						food.Serve();
 					}
+					//}
 				}
-				customerOrderList.Add($"Customer: {singleCustomer.CustomerName}, Chicken {chickenCount}, Egg {eggCount}");
+				customerOrderList.Add($"Customer: {Name}, Chicken {chickenCount}, Egg {eggCount}");
+				return customerOrderList;
 			}
-			return customerOrderList;
 		}
 	}
 }

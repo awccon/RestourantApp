@@ -70,7 +70,7 @@ namespace RestaurantApp4
 		/// <summary>
 		/// Gets type of item and returns collections list
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="T">Type of Foods or Drinks</typeparam>
 		/// <returns></returns>
 		public List<IMenuItem> Get<T>() where T : IMenuItem
 		{
