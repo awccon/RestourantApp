@@ -24,27 +24,43 @@ namespace RestaurantApp4
 		{
 			if (table.Count > tableLength)
 				throw new Exception("Range up to 8 customer per table");
-			if (table.Count == 0)
+
+			if (this.table.FirstOrDefault(c => c.CustomerName == Name) == null)
 			{
 				table.Add(new Customer(new T()) { CustomerName = Name });
 			}
 			else
 			{
-				foreach (var item in table)
+				table.ForEach(c =>
 				{
-					if (item.CustomerName == Name)
+					if (c.CustomerName == Name)
 					{
-						item.MenuOrder.Add(new T());
-						isNewClient = false;
-						break;
+						c.MenuOrder.Add(new T());
 					}
-					isNewClient = true;
-				}
-				if (isNewClient)
-				{
-					table.Add(new Customer(new T()) { CustomerName = Name });
-				}
+				});
 			}
+
+			//if (table.Count == 0)
+			//{
+			//	table.Add(new Customer(new T()) { CustomerName = Name });
+			//}
+			//else
+			//{
+			//	foreach (var item in table)
+			//	{
+			//		if (item.CustomerName == Name)
+			//		{
+			//			item.MenuOrder.Add(new T());
+			//			isNewClient = false;
+			//			break;
+			//		}
+			//		isNewClient = true;
+			//	}
+			//	if (isNewClient)
+			//	{
+			//		table.Add(new Customer(new T()) { CustomerName = Name });
+			//	}
+			//}
 		}
 
 		public List<IMenuItem> this[string Name]
@@ -52,17 +68,21 @@ namespace RestaurantApp4
 			get
 			{
 				List<IMenuItem> singleCustomerOrders = new List<IMenuItem>();
-
-				foreach (var singleClient in table)
+				var customer = table.FirstOrDefault(c => c.CustomerName == Name);
+				if(customer == null)
 				{
-					if (singleClient.CustomerName == Name)
-					{
-						foreach (var item in singleClient.MenuOrder)
-						{
-							singleCustomerOrders.Add(item);
-						}
-					}
+					singleCustomerOrders = customer.MenuOrder;
 				}
+				//foreach (var singleClient in table)
+				//{
+				//	if (singleClient.CustomerName == Name)
+				//	{
+				//		foreach (var item in singleClient.MenuOrder)
+				//		{
+				//			singleCustomerOrders.Add(item);
+				//		}
+				//	}
+				//}
 				return singleCustomerOrders;
 			}
 		}
