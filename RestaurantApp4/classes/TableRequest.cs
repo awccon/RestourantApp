@@ -11,7 +11,7 @@ namespace RestaurantApp4
 	internal class TableRequest : IEnumerable<Customer>
 	{
 		List<Customer> table = new List<Customer>();
-		private bool isNewClient = false;
+		//private bool isNewClient = false;
 		private int tableLength = 8;
 
 		/// <summary>
@@ -69,10 +69,12 @@ namespace RestaurantApp4
 			{
 				List<IMenuItem> singleCustomerOrders = new List<IMenuItem>();
 				var customer = table.FirstOrDefault(c => c.CustomerName == Name);
-				if(customer != null)
+				if (customer != null)
 				{
 					singleCustomerOrders = customer.MenuOrder;
 				}
+				return singleCustomerOrders;
+
 				//foreach (var singleClient in table)
 				//{
 				//	if (singleClient.CustomerName == Name)
@@ -83,7 +85,6 @@ namespace RestaurantApp4
 				//		}
 				//	}
 				//}
-				return singleCustomerOrders;
 			}
 		}
 
@@ -110,6 +111,7 @@ namespace RestaurantApp4
 
 		public IEnumerator<Customer> GetEnumerator()
 		{
+
 			return table.GetEnumerator();
 		}
 
