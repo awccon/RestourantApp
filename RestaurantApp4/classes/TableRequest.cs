@@ -69,7 +69,7 @@ namespace RestaurantApp4
 			{
 				List<IMenuItem> singleCustomerOrders = new List<IMenuItem>();
 				var customer = table.FirstOrDefault(c => c.CustomerName == Name);
-				if(customer == null)
+				if(customer != null)
 				{
 					singleCustomerOrders = customer.MenuOrder;
 				}
