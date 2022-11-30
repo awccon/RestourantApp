@@ -10,81 +10,40 @@ namespace RestaurantApp4
 {
 	internal class TableRequest : IEnumerable<Customer>
 	{
-		List<Customer> table = new List<Customer>();
-		//private bool isNewClient = false;
+		List<Customer> listOfCustomers = new List<Customer>();
 		private int tableLength = 8;
 
 		/// <summary>
 		/// Add new order
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
-		/// <param name="Name"></param>
+		/// <param name="name"></param>
 		/// <exception cref="Exception"></exception>
-		public void Add<T>(string Name) where T : IMenuItem, new()
+		public void Add<T>(string name) where T : IMenuItem, new()
 		{
-			if (table.Count > tableLength)
+			if (listOfCustomers.Count > tableLength)
 				throw new Exception("Range up to 8 customer per table");
 
-			if (this.table.FirstOrDefault(c => c.CustomerName == Name) == null)
+			Customer customerObject = this.listOfCustomers.FirstOrDefault(c => c.Name == name);
+			if (customerObject == null)
 			{
-				table.Add(new Customer(new T()) { CustomerName = Name });
+				customerObject = new Customer(name);
+				listOfCustomers.Add(customerObject);
 			}
-			else
-			{
-				table.ForEach(c =>
-				{
-					if (c.CustomerName == Name)
-					{
-						c.MenuOrder.Add(new T());
-					}
-				});
-			}
-
-			//if (table.Count == 0)
-			//{
-			//	table.Add(new Customer(new T()) { CustomerName = Name });
-			//}
-			//else
-			//{
-			//	foreach (var item in table)
-			//	{
-			//		if (item.CustomerName == Name)
-			//		{
-			//			item.MenuOrder.Add(new T());
-			//			isNewClient = false;
-			//			break;
-			//		}
-			//		isNewClient = true;
-			//	}
-			//	if (isNewClient)
-			//	{
-			//		table.Add(new Customer(new T()) { CustomerName = Name });
-			//	}
-			//}
+			customerObject.MenuOrder.Add(new T());
 		}
 
 		public List<IMenuItem> this[string Name]
 		{
 			get
 			{
-				List<IMenuItem> singleCustomerOrders = new List<IMenuItem>();
-				var customer = table.FirstOrDefault(c => c.CustomerName == Name);
-				if (customer != null)
+				List<IMenuItem> customerOrders = new List<IMenuItem>();
+				var singleCustomer = listOfCustomers.FirstOrDefault(c => c.Name == Name);
+				if (singleCustomer != null)
 				{
-					singleCustomerOrders = customer.MenuOrder;
+					customerOrders = singleCustomer.MenuOrder;
 				}
-				return singleCustomerOrders;
-
-				//foreach (var singleClient in table)
-				//{
-				//	if (singleClient.CustomerName == Name)
-				//	{
-				//		foreach (var item in singleClient.MenuOrder)
-				//		{
-				//			singleCustomerOrders.Add(item);
-				//		}
-				//	}
-				//}
+				return customerOrders;
 			}
 		}
 
@@ -93,26 +52,26 @@ namespace RestaurantApp4
 		/// </summary>
 		/// <typeparam name="T">Type of Foods or Drinks</typeparam>
 		/// <returns></returns>
-		public List<IMenuItem> Get<T>() where T : IMenuItem
+		public List<T> Get<T>() where T : IMenuItem
 		{
-			List<IMenuItem> items = new List<IMenuItem>();
-			foreach (var eachCustomerOrder in table)
+			List<T> customersMenuItems = new List<T>();
+			foreach (var eachCustomerOrder in listOfCustomers)
 			{
-				foreach (var item in eachCustomerOrder.MenuOrder)
+				foreach (var currentMenuItem in eachCustomerOrder.MenuOrder)
 				{
-					if (typeof(T).IsAssignableFrom(item.GetType()))
+					if (currentMenuItem is T a)
 					{
-						items.Add(item);
+						customersMenuItems.Add(a);
 					}
 				}
 			}
-			return items;
+			return customersMenuItems;
 		}
 
 		public IEnumerator<Customer> GetEnumerator()
 		{
 
-			return table.GetEnumerator();
+			return listOfCustomers.GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
