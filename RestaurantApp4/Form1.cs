@@ -1,14 +1,16 @@
+using RestaurantApp4.classes;
 using System.Windows.Forms;
 
 namespace RestaurantApp4
 {
 	public partial class Form1 : Form
 	{
-		Server server = new Server();
+		Server server = null;
 
 		public Form1()
 		{
 			InitializeComponent();
+			server = new Server(Printer);
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -19,13 +21,12 @@ namespace RestaurantApp4
 
 		private void button2_Click(object sender, EventArgs e)
 		{
-
+			server.SendToCook();
 		}
 
-		private void button3_Click(object sender, EventArgs e)
+		public void Printer(string text)
 		{
-			listBox1.DataSource = null;
-			listBox1.DataSource = server.PrepareFood(txtClientName.Text);
+			listBox1.Items.Insert(0, text);
 		}
 	}
 }

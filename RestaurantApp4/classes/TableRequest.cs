@@ -24,13 +24,13 @@ namespace RestaurantApp4
 			if (listOfCustomers.Count > tableLength)
 				throw new Exception("Range up to 8 customer per table");
 
-			Customer customerObject = this.listOfCustomers.FirstOrDefault(c => c.Name == name);
-			if (customerObject == null)
+			Customer? customer = this.listOfCustomers.FirstOrDefault(c => c.Name == name);
+			if (customer == null)
 			{
-				customerObject = new Customer(name);
-				listOfCustomers.Add(customerObject);
+				customer = new Customer(name);
+				listOfCustomers.Add(customer);
 			}
-			customerObject.MenuOrder.Add(new T());
+			customer.Orders.Add(new T());
 		}
 
 		public List<IMenuItem> this[string Name]
@@ -41,7 +41,7 @@ namespace RestaurantApp4
 				var singleCustomer = listOfCustomers.FirstOrDefault(c => c.Name == Name);
 				if (singleCustomer != null)
 				{
-					customerOrders = singleCustomer.MenuOrder;
+					customerOrders = singleCustomer.Orders;
 				}
 				return customerOrders;
 			}
@@ -57,7 +57,7 @@ namespace RestaurantApp4
 			List<T> customersMenuItems = new List<T>();
 			foreach (var eachCustomerOrder in listOfCustomers)
 			{
-				foreach (var currentMenuItem in eachCustomerOrder.MenuOrder)
+				foreach (var currentMenuItem in eachCustomerOrder.Orders)
 				{
 					if (currentMenuItem is T a)
 					{
@@ -70,7 +70,6 @@ namespace RestaurantApp4
 
 		public IEnumerator<Customer> GetEnumerator()
 		{
-
 			return listOfCustomers.GetEnumerator();
 		}
 

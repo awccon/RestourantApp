@@ -15,11 +15,12 @@ namespace RestaurantApp4
 
 		public delegate void ReadyEvent(TableRequest table);
 		public event ReadyEvent? OnSubmitEvent;
-
-		public Server()
+		private Action<string> Printer = null;
+		public Server(Action<string> printer)
 		{
 			this.cook = new Cook(this);
 			this.cook.OnProcessFinished += OnCookProcessedCooking;
+			Printer = printer;
 		}
 
 		/// <summary>
@@ -51,26 +52,35 @@ namespace RestaurantApp4
 					tableRequests.Add<Pepsi>(Name);
 					break;
 			}
+		}
+
+		public void SendToCook()
+		{
 			OnSubmitEvent?.Invoke(tableRequests);
 		}
 
-		public void OnCookProcessedCooking()
+		/// <summary>
+		/// This method runs when Cook processed cooking foods
+		/// </summary>
+		/// <returns>true once method called</returns>
+		private void OnCookProcessedCooking()
 		{
-
+			 ServeOrder();
 		}
 
 		/// <summary>
 		/// Prepares foods to each customer
 		/// </summary>
 		/// <returns></returns>
-		public List<string> PrepareFood()
+		public void ServeOrder()
 		{
 			List<string> customerOrderList = new List<string>();
+
 			foreach (var singleCustomer in tableRequests)
 			{
 				int chickenCount = 0;
 				int eggCount = 0;
-				foreach (var item in singleCustomer.MenuOrder)
+				foreach (var item in singleCustomer.Orders)
 				{
 					if (item is CookableFood food)
 					{
@@ -88,9 +98,8 @@ namespace RestaurantApp4
 						food.Serve();
 					}
 				}
-				customerOrderList.Add($"Customer: {singleCustomer.Name}, Chicken {chickenCount}, Egg {eggCount}");
+				Printer?.Invoke($"Customer: {singleCustomer.Name}, Chicken {chickenCount}, Egg {eggCount}");
 			}
-			return customerOrderList;
 		}
 	}
 }

@@ -12,12 +12,9 @@ namespace RestaurantApp4
 		public delegate void CookingProcessEvent();
 		public event CookingProcessEvent? OnProcessFinished;
 
-		public Cook(Server server)
-		{
-			server.OnSubmitEvent += table => this.Process(table);
-		}
+		public Cook(Server server) => server.OnSubmitEvent += table => this.Process(table);
 
-		public void Process(TableRequest currentTable)
+		private void Process(TableRequest currentTable)
 		{
 			var CookableItems = currentTable.Get<CookableFood>();
 
