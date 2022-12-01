@@ -1,5 +1,6 @@
 using RestaurantApp4.classes;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RestaurantApp4
 {
@@ -11,22 +12,46 @@ namespace RestaurantApp4
 		{
 			InitializeComponent();
 			server = new Server(Printer);
+			comboBox1.DataSource = Enum.GetValues(typeof(listOfDrinks));
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void receiveBtn_Click(object sender, EventArgs e)
 		{
-			server.SubmitNewOrder(int.Parse(txtChickenCount.Text), int.Parse(txtEggCount.Text), txtClientName.Text, listOfDrinks.Tea);
+			int chickenCount = 0;
+			int eggCount = 0;
+			string name = txtClientName.Text.Trim();
+
+			if (name == "")
+				listBox1.Items.Add("Incorrect name of customer");
+			else if (!int.TryParse(txtChickenCount.Text, out chickenCount))
+				listBox1.Items.Add("Please enter a correct value of chicken");
+			else if (!int.TryParse(txtEggCount.Text, out eggCount))
+				listBox1.Items.Add("Please enter a correct value of egg");
+			else
+			{
+				listOfDrinks drink;
+				Enum.TryParse(comboBox1.SelectedValue.ToString(), out drink);
+
+				server.SubmitNewOrder(chickenCount, eggCount, name, drink);
+			}
 			txtChickenCount.Text = txtEggCount.Text = txtClientName.Text = "";
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void sendBtn_Click(object sender, EventArgs e)
 		{
-			server.SendToCook();
+			try
+			{
+				server.SendToCook();
+			}
+			catch (Exception ex)
+			{
+				listBox1.Items.Add(ex.Message);
+			}
 		}
 
 		public void Printer(string text)
 		{
-			listBox1.Items.Insert(0, text);
+			listBox1.Items.Add(text);
 		}
 	}
 }

@@ -2,23 +2,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Windows.Forms.LinkLabel;
 
+
 namespace RestaurantApp4
 {
+	public enum buttonStatus
+	{
+		notSubmitted,
+		Submitted,
+		Send
+	}
 	internal class Server
 	{
-		TableRequest tableRequests = new TableRequest();
+		TableRequest tableRequests;
 		Cook cook;
+		buttonStatus buttonStatus = buttonStatus.notSubmitted;
 
 		public delegate void ReadyEvent(TableRequest table);
+		public delegate void FoodServed();
 		public event ReadyEvent? OnSubmitEvent;
+		public event FoodServed? OnFoodServed;
+
 		private Action<string> Printer = null;
 		public Server(Action<string> printer)
 		{
 			this.cook = new Cook(this);
+			this.tableRequests = new TableRequest(this);
 			this.cook.OnProcessFinished += OnCookProcessedCooking;
 			Printer = printer;
 		}
@@ -52,27 +65,37 @@ namespace RestaurantApp4
 					tableRequests.Add<Pepsi>(Name);
 					break;
 			}
+			buttonStatus = buttonStatus.Submitted;
 		}
 
+		/// <summary>
+		/// This method runs submit event
+		/// </summary>
+		/// <exception cref="Exception"></exception>
 		public void SendToCook()
 		{
+			if (buttonStatus != buttonStatus.Submitted)
+				throw new Exception("Please submit new order");
 			OnSubmitEvent?.Invoke(tableRequests);
+			buttonStatus = buttonStatus.Send;
 		}
 
 		/// <summary>
 		/// This method runs when Cook processed cooking foods
 		/// </summary>
 		/// <returns>true once method called</returns>
-		private void OnCookProcessedCooking()
+		private async void OnCookProcessedCooking()
 		{
-			 ServeOrder();
+			Printer?.Invoke("Cook processed an orders....");
+			await Task.Delay(3000);
+			ServeOrder();
 		}
 
 		/// <summary>
-		/// Prepares foods to each customer
+		/// Serves food to each customer
 		/// </summary>
 		/// <returns></returns>
-		public void ServeOrder()
+		public async void ServeOrder()
 		{
 			List<string> customerOrderList = new List<string>();
 
@@ -80,26 +103,28 @@ namespace RestaurantApp4
 			{
 				int chickenCount = 0;
 				int eggCount = 0;
-				foreach (var item in singleCustomer.Orders)
+				IMenuItem drink = null;
+
+				foreach (var menuItem in singleCustomer)
 				{
-					if (item is CookableFood food)
+					if (menuItem is Drink)
 					{
-						if (food is Chicken)
-						{
-							food.Obtain();
-							chickenCount++;
-						}
-						else
-						{
-							var egg = food as Egg;
-							food.Obtain();
-							eggCount++;
-						}
-						food.Serve();
+						drink = menuItem;
 					}
+					if (menuItem is Chicken)
+						chickenCount++;
+					if (menuItem is Egg)
+						eggCount++;
+					menuItem.Obtain();
+					menuItem.Serve();
 				}
-				Printer?.Invoke($"Customer: {singleCustomer.Name}, Chicken {chickenCount}, Egg {eggCount}");
+				Printer?.Invoke($"Customer: {singleCustomer.Name}, Drink: {drink}");
+				await Task.Delay(3000);
+				Printer?.Invoke($"Customer: {singleCustomer.Name}, Chicken: {chickenCount}, Egg: {eggCount}");
 			}
+			OnFoodServed?.Invoke();
+			Printer?.Invoke("Serving customers finished successfully and tableRequest is empty");
 		}
 	}
 }
+

@@ -12,6 +12,7 @@ namespace RestaurantApp4
 	/// </summary>
 	public enum listOfDrinks
 	{
+		NoDrink,
 		Tea,
 		CocaCola,
 		Pepsi

@@ -13,6 +13,11 @@ namespace RestaurantApp4
 		List<Customer> listOfCustomers = new List<Customer>();
 		private int tableLength = 8;
 
+		public TableRequest(Server server)
+		{
+			server.OnFoodServed += clearCustomersList;
+		}
+
 		/// <summary>
 		/// Add new order
 		/// </summary>
@@ -76,6 +81,11 @@ namespace RestaurantApp4
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
+		}
+
+		private void clearCustomersList()
+		{
+			listOfCustomers.Clear();
 		}
 	}
 }
