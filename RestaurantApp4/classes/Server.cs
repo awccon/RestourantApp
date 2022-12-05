@@ -11,7 +11,7 @@ namespace RestaurantApp4
 {
 	public enum buttonStatus
 	{
-		notSubmitted,
+		Default,
 		Submitted,
 		Send
 	}
@@ -19,7 +19,7 @@ namespace RestaurantApp4
 	{
 		TableRequest tableRequests;
 		Cook cook;
-		buttonStatus buttonStatus = buttonStatus.notSubmitted;
+		buttonStatus buttonStatus = buttonStatus.Default;
 
 		public delegate void ReadyEvent(TableRequest table);
 		public delegate void FoodServed();
