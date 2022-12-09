@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp4
 {
+	//CR: Is this really a button status or the Table Request status. Rename the enum name. And enum and class names are usually with capital case
 	public enum buttonStatus
 	{
 		Default,
@@ -106,6 +107,7 @@ namespace RestaurantApp4
 
 				foreach (var menuItem in singleCustomer)
 				{
+					//CR: Why do you need this if? 
 					if (menuItem is Drink)
 					{
 						drink = menuItem;
@@ -114,7 +116,7 @@ namespace RestaurantApp4
 						chickenCount++;
 					if (menuItem is Egg)
 						eggCount++;
-					menuItem.Obtain();
+					menuItem.Obtain();//CR: You should only obtain drinks in here. Other kind of food should be obtained by cook before cooking.
 					menuItem.Serve();
 				}
 				Printer?.Invoke($"Customer: {singleCustomer.Name}, Drink: {drink}");

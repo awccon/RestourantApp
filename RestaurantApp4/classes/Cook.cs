@@ -9,6 +9,7 @@ namespace RestaurantApp4
 {
 	internal class Cook
 	{
+		//Why do you have delegate if you have no parameters?
 		public delegate void CookingProcessEvent();
 		public event CookingProcessEvent? OnProcessFinished;
 
