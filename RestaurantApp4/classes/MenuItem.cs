@@ -33,6 +33,7 @@ namespace RestaurantApp4
 	/// </summary>
 	abstract class CookableFood : MenuItem
 	{
+		//CR: Since the method below are just empty, it should have been inplemented one level above and no need to make it abstract unless it is necessary
 		public override void Obtain()
 		{
 		}
