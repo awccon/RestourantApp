@@ -9,23 +9,15 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp4
 {
-	//CR: Is this really a button status or the Table Request status. Rename the enum name. And enum and class names are usually with capital case
-	public enum buttonStatus
-	{
-		Default,
-		Submitted,
-		Send
-	}
 	internal class Server
 	{
 		TableRequest tableRequests;
 		Cook cook;
-		buttonStatus buttonStatus = buttonStatus.Default;
+		tableStatus trStatus = tableStatus.Default;
 
 		public delegate void ReadyEvent(TableRequest table);
-		public delegate void FoodServed();
 		public event ReadyEvent? OnSubmitEvent;
-		public event FoodServed? OnFoodServed;
+		public event Action? OnFoodServed;
 
 		private Action<string> Printer = null;
 		public Server(Action<string> printer)
@@ -65,7 +57,7 @@ namespace RestaurantApp4
 					tableRequests.Add<Pepsi>(Name);
 					break;
 			}
-			buttonStatus = buttonStatus.Submitted;
+			trStatus = tableStatus.Submitted;
 		}
 
 		/// <summary>
@@ -74,10 +66,10 @@ namespace RestaurantApp4
 		/// <exception cref="Exception"></exception>
 		public void SendToCook()
 		{
-			if (buttonStatus != buttonStatus.Submitted)
+			if (trStatus != tableStatus.Submitted)
 				throw new Exception("Please submit new order");
 			OnSubmitEvent?.Invoke(tableRequests);
-			buttonStatus = buttonStatus.Send;
+			trStatus = tableStatus.Send;
 		}
 
 		/// <summary>
@@ -107,16 +99,16 @@ namespace RestaurantApp4
 
 				foreach (var menuItem in singleCustomer)
 				{
-					//CR: Why do you need this if? 
-					if (menuItem is Drink)
-					{
-						drink = menuItem;
-					}
 					if (menuItem is Chicken)
 						chickenCount++;
-					if (menuItem is Egg)
+					else if (menuItem is Egg)
 						eggCount++;
-					menuItem.Obtain();//CR: You should only obtain drinks in here. Other kind of food should be obtained by cook before cooking.
+					else
+					{
+						menuItem.Obtain();
+						drink = menuItem;
+					}
+
 					menuItem.Serve();
 				}
 				Printer?.Invoke($"Customer: {singleCustomer.Name}, Drink: {drink}");

@@ -23,25 +23,15 @@ namespace RestaurantApp4
 	/// </summary>
 	abstract class MenuItem : IMenuItem
 	{
+		public void Obtain() { }
 
-		public abstract void Obtain();
-
-		public abstract void Serve();
+		public void Serve() { }
 	}
 	/// <summary>
 	/// Cookable foods base class which inherited from MenuItem
 	/// </summary>
 	abstract class CookableFood : MenuItem
 	{
-		//CR: Since the method below are just empty, it should have been inplemented one level above and no need to make it abstract unless it is necessary
-		public override void Obtain()
-		{
-		}
-
-		public override void Serve()
-		{
-		}
-
 		public abstract void Cook();
 	}
 	/// <summary>
@@ -52,13 +42,6 @@ namespace RestaurantApp4
 		public override string ToString()
 		{
 			return this.GetType().Name;
-		}
-		public override void Obtain()
-		{
-		}
-
-		public override void Serve()
-		{
 		}
 	}
 	/// <summary>

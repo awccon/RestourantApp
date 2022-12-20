@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp4
 {
+	public enum tableStatus
+	{
+		Default,
+		Submitted,
+		Send
+	}
+
 	internal class TableRequest : IEnumerable<Customer>
 	{
 		List<Customer> listOfCustomers = new List<Customer>();
