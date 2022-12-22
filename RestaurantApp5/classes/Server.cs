@@ -12,7 +12,7 @@ namespace RestaurantApp4
 	internal class Server
 	{
 		TableRequest tableRequests;
-		Cook cook;
+		
 		tableStatus trStatus = tableStatus.Default;
 
 		public delegate void ReadyEvent(TableRequest table);
@@ -22,9 +22,11 @@ namespace RestaurantApp4
 		private Action<string> Printer = null;
 		public Server(Action<string> printer)
 		{
-			this.cook = new Cook(this);
+			this.cook1 = new Cook(this);
+			this.cook2 = new Cook(this);
 			this.tableRequests = new TableRequest(this);
-			this.cook.OnProcessFinished += OnCookProcessedCooking;
+			this.cook1.OnProcessFinished += OnCookProcessedCooking;
+			this.cook2.OnProcessFinished += OnCookProcessedCooking;
 			Printer = printer;
 		}
 

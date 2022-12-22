@@ -9,7 +9,6 @@ namespace RestaurantApp4
 {
 	internal class Cook
 	{
-		//public delegate void CookingProcessEvent();
 		public event Action? OnProcessFinished;
 
 		public Cook(Server server) => server.OnSubmitEvent += table => this.Process(table);
