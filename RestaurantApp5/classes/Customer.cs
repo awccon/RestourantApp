@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantApp4.classes
+namespace RestaurantApp5.classes
 {
 	internal class Customer : IEnumerable<IMenuItem>
 	{

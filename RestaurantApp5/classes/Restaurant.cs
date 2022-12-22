@@ -1,4 +1,4 @@
-﻿using RestaurantApp4;
+﻿using RestaurantApp5;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +13,12 @@ namespace RestaurantApp5.classes
 		Cook cook1, cook2;
 		public Restaurant()
 		{
-			this.cook1 = new Cook();
-			this.cook2 = new Cook();
-			this.server1 = new Server(Action<string> printer);
-			this.server2 = new Server();
+			//this.cook1 = new Cook();
+			//this.cook2 = new Cook();
+			//this.server1 = new Server(Action<string> printer);
+			//this.server2 = new Server();
 		}
+
+
 	}
 }

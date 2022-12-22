@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantApp4
+namespace RestaurantApp5
 {
 	internal interface IMenuItem
 	{

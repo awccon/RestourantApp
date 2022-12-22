@@ -1,4 +1,4 @@
-﻿using RestaurantApp4.classes;
+﻿using RestaurantApp5.classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace RestaurantApp4
+namespace RestaurantApp5
 {
 	internal class Server
 	{
 		TableRequest tableRequests;
-		
+		Cook cook;
 		tableStatus trStatus = tableStatus.Default;
 
 		public delegate void ReadyEvent(TableRequest table);
@@ -22,11 +22,9 @@ namespace RestaurantApp4
 		private Action<string> Printer = null;
 		public Server(Action<string> printer)
 		{
-			this.cook1 = new Cook(this);
-			this.cook2 = new Cook(this);
+			this.cook = new Cook(this);
 			this.tableRequests = new TableRequest(this);
-			this.cook1.OnProcessFinished += OnCookProcessedCooking;
-			this.cook2.OnProcessFinished += OnCookProcessedCooking;
+			this.cook.OnProcessFinished += OnCookProcessedCooking;
 			Printer = printer;
 		}
 
