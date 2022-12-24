@@ -137,12 +137,13 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(865, 876);
+			this.ClientSize = new System.Drawing.Size(854, 876);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.listBox1);
 			this.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
 			this.Name = "Form1";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Form1";
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();

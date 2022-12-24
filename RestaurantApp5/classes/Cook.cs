@@ -13,15 +13,19 @@ namespace RestaurantApp5
 
 		public Cook(Server server) => server.OnSubmitEvent += table => this.Process(table);
 
-		private void Process(TableRequest currentTable)
+		private async Task Process(TableRequest currentTable)
 		{
-			var CookableItems = currentTable.Get<CookableFood>();
-
-			foreach (CookableFood item in CookableItems)
+			lock (currentTable)
 			{
-				item.Obtain();
-				item.Cook();
+				var CookableItems = currentTable.Get<CookableFood>();
+
+				foreach (CookableFood item in CookableItems)
+				{
+					item.Obtain();
+					item.Cook();
+				}
 			}
+			Thread.Sleep(3000);
 			OnProcessFinished?.Invoke();
 		}
 	}
