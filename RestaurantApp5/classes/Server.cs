@@ -15,7 +15,7 @@ namespace RestaurantApp5
 		Cook cook;
 		tableStatus trStatus = tableStatus.Default;
 
-		public event Func<TableRequest, Task> OnSubmitEvent;
+		public event Func<TableRequest, Task>? OnSubmitEvent;
 		public event Action? OnFoodServed;
 		private Action<string> Printer = null;
 		public Server(Action<string> printer)
