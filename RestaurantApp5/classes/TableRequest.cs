@@ -19,12 +19,7 @@ namespace RestaurantApp5
 	{
 		List<Customer> listOfCustomers = new List<Customer>();
 		private int tableLength = 8;
-
-		public TableRequest(Server server)
-		{
-			server.OnFoodServed += clearCustomersList;
-		}
-
+		public tableStatus GetTableStatus = tableStatus.Default;
 		/// <summary>
 		/// Add new order
 		/// </summary>
@@ -34,7 +29,9 @@ namespace RestaurantApp5
 		public void Add<T>(string name) where T : IMenuItem, new()
 		{
 			if (listOfCustomers.Count > tableLength)
+			{
 				throw new Exception("Range up to 8 customer per table");
+			}
 
 			Customer? customer = this.listOfCustomers.FirstOrDefault(c => c.Name == name);
 			if (customer == null)
@@ -43,6 +40,7 @@ namespace RestaurantApp5
 				listOfCustomers.Add(customer);
 			}
 			customer.Orders.Add(new T());
+			GetTableStatus = tableStatus.Submitted;
 		}
 
 		public List<IMenuItem> this[string Name]
@@ -90,7 +88,7 @@ namespace RestaurantApp5
 			return GetEnumerator();
 		}
 
-		private void clearCustomersList()
+		public void ClearCurrenttable()
 		{
 			listOfCustomers.Clear();
 		}

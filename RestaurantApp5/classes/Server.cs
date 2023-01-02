@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.LinkLabel;
 
 
 namespace RestaurantApp5
@@ -12,17 +14,13 @@ namespace RestaurantApp5
 	internal class Server
 	{
 		TableRequest tableRequests;
-		Cook cook;
-		tableStatus trStatus = tableStatus.Default;
+		List<Cook> cooks;
 
-		public event Func<TableRequest, Task>? OnSubmitEvent;
-		public event Action? OnFoodServed;
 		private Action<string> Printer = null;
 		public Server(Action<string> printer)
 		{
-			this.cook = new Cook(this);
-			this.tableRequests = new TableRequest(this);
-			this.cook.OnProcessFinished += OnCookProcessedCooking;
+			this.tableRequests = new TableRequest();
+			this.cooks = new List<Cook>() { new Cook(9000), new Cook(12000) };
 			Printer = printer;
 		}
 
@@ -55,30 +53,28 @@ namespace RestaurantApp5
 					tableRequests.Add<Pepsi>(Name);
 					break;
 			}
-			trStatus = tableStatus.Submitted;
 		}
 
 		/// <summary>
 		/// This method runs submit event
 		/// </summary>
 		/// <exception cref="Exception"></exception>
-		public void SendToCook()
+		public async void SendToCook()
 		{
-			if (trStatus != tableStatus.Submitted)
+			if (tableRequests.GetTableStatus != tableStatus.Submitted)
 				throw new Exception("Please submit new order");
-			OnSubmitEvent?.Invoke(tableRequests);
-			trStatus = tableStatus.Send;
-		}
 
-		/// <summary>
-		/// This method runs when Cook processed cooking foods
-		/// </summary>
-		/// <returns>true once method called</returns>
-		private async void OnCookProcessedCooking()
-		{
-			Printer?.Invoke("Cook processed an orders....");
-			await Task.Delay(3000);
-			ServeOrder();
+			if (!cooks[0].isAvailable)
+			{
+				Printer?.Invoke($" First Cook is available and preparing a food");
+				await cooks[0].Process(tableRequests);
+			}
+			else if (!cooks[1].isAvailable)
+			{
+				Printer?.Invoke($" Second Cook is available and preparing a food");
+				await cooks[1].Process(tableRequests);
+			}
+
 		}
 
 		/// <summary>
@@ -113,7 +109,6 @@ namespace RestaurantApp5
 				await Task.Delay(3000);
 				Printer?.Invoke($"Customer: {singleCustomer.Name}, Chicken: {chickenCount}, Egg: {eggCount}");
 			}
-			OnFoodServed?.Invoke();
 			Printer?.Invoke("Serving customers finished successfully and tableRequest is empty");
 		}
 	}

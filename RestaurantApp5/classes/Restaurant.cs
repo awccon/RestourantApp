@@ -9,15 +9,15 @@ namespace RestaurantApp5.classes
 {
 	internal class Restaurant
 	{
-		Server server1, server2;
-		Cook cook1, cook2;
-		public Restaurant()
-		{
-			//this.cook1 = new Cook();
-			//this.cook2 = new Cook();
-			//this.server1 = new Server(Action<string> printer);
-			//this.server2 = new Server();
-		}
+		//Server server;
+		//Cook cook1, cook2;
+		//object CookLock = "Cook lock"; 
+		//public Restaurant()
+		//{
+		//	this.server = new Server(null);
+		//	this.cook1 = new Cook(server);
+		//	this.cook2 = new Cook(server);
+		//}
 
 
 	}
