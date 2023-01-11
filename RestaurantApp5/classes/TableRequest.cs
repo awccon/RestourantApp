@@ -11,15 +11,27 @@ namespace RestaurantApp5
 	public enum tableStatus
 	{
 		Default,
-		Submitted,
-		Send
+		Ordered,
+		Send,
+		Processing
 	}
 
-	internal class TableRequest : IEnumerable<Customer>
+	internal class TableRequest : IEnumerable<Customer>, IDisposable
 	{
 		List<Customer> listOfCustomers = new List<Customer>();
 		private int tableLength = 8;
 		public tableStatus GetTableStatus = tableStatus.Default;
+		public readonly int ID;
+		public TableRequest()
+		{
+			this.ID = new Random().Next(2);
+		}
+
+		public TableRequest(List<Customer> cutomer)
+		{
+			listOfCustomers = cutomer;
+		}
+
 		/// <summary>
 		/// Add new order
 		/// </summary>
@@ -40,7 +52,7 @@ namespace RestaurantApp5
 				listOfCustomers.Add(customer);
 			}
 			customer.Orders.Add(new T());
-			GetTableStatus = tableStatus.Submitted;
+			GetTableStatus = tableStatus.Ordered;
 		}
 
 		public List<IMenuItem> this[string Name]
@@ -88,9 +100,20 @@ namespace RestaurantApp5
 			return GetEnumerator();
 		}
 
-		public void ClearCurrenttable()
+		//public void ClearCurrenttable()
+		//{
+		//	listOfCustomers.Clear();
+		//}
+
+		public void Dispose()
 		{
-			listOfCustomers.Clear();
+			listOfCustomers = new List<Customer>();
 		}
+
+		~TableRequest()
+		{
+			Dispose();
+		}
+
 	}
 }

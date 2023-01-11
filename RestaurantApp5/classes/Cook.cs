@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantApp5.classes;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,34 +11,40 @@ namespace RestaurantApp5
 {
 	internal class Cook
 	{
-		public bool isAvailable = false;
-		private object lockObj = "locker";
-		private int prepareTime = 0;
-		private TableRequest currentTable = null;
-		public Cook(int preparetime) => this.prepareTime = preparetime;
+		//public bool isAvailable = false;
+		private object lockObj;
+		private int foodPrepairTime = 1000;
 
-		public async Task<TableRequest> Process(TableRequest tableRequests)
+		public Cook(int yearOfExperience = 6)
+		{
+			this.foodPrepairTime *= yearOfExperience;
+			lockObj = Guid.NewGuid();
+		}
+
+		public Task<TableRequest> Process(TableRequest tableRequests)
 		{
 			if (tableRequests is null)
 				throw new Exception("Null tableRequests");
-			
-			currentTable = tableRequests;
-			tableRequests.ClearCurrenttable();
-			tableRequests.GetTableStatus = tableStatus.Default;
+
 			lock (lockObj)
 			{
-				isAvailable = true;
-				var CookableItems = currentTable.Get<CookableFood>();
+				//isAvailable = true;
+
+				//Setting table request status
+				tableRequests.GetTableStatus = tableStatus.Processing;
+
+				var CookableItems = tableRequests.Get<CookableFood>();
 
 				foreach (CookableFood item in CookableItems)
 				{
-					Thread.Sleep(prepareTime);
 					item.Obtain();
+					Task.Delay(foodPrepairTime);
 					item.Cook();
 				}
 			}
-			isAvailable = false;
-			return currentTable;
+			//isAvailable = false;
+			tableRequests.GetTableStatus = tableStatus.Send;
+			return Task.FromResult(tableRequests);
 		}
 	}
 }
