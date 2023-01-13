@@ -48,20 +48,18 @@ namespace RestaurantApp5.classes
 		/// </summary>
 		public async void SendTableToCook()
 		{
-			if (tableFromServer != null)
+			var currentTable = server.GetCurrentTable();
+			var currentCook = cooks.FirstOrDefault(c => c.isAvailable == true);
+			if (currentCook != null)
 			{
-				var currentCook = cooks.FirstOrDefault(c => c.isAvailable == true);
-				if (currentCook != null)
-				{
-					var prepairedFood = await currentCook.Process(tableFromServer);
-					server.Serve(prepairedFood);
-					DiscardCurrentTable(prepairedFood);
-					tableFromServer = null;
-				}
-				else
-					this.Message("there are no available cooks, please wait untill it gets done");
+				var prepairedFood = await currentCook.Process(currentTable);
+				currentTable = null;
+				server.RemoveTable();
+				server.Serve(prepairedFood);
+				DiscardCurrentTable(prepairedFood);
 			}
-			else tableFromServer = server.GetCurrentTable();
+			else
+				this.Message("there are no available cooks, please wait untill it gets done");
 		}
 
 		private void DiscardCurrentTable(TableRequest currentTable)
@@ -74,7 +72,6 @@ namespace RestaurantApp5.classes
 		private List<Cook> cooks { get; set; } = new List<Cook>();
 		private Server server { get; set; }
 		public Action<string> Message { get; }
-		private TableRequest tableFromServer = null;
 		#endregion
 	}
 }

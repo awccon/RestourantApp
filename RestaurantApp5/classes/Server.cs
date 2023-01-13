@@ -64,15 +64,8 @@ namespace RestaurantApp5
 		/// <exception cref="Exception"></exception>
 		public TableRequest GetCurrentTable()
 		{
-			try
-			{
 				currentTable.CurrentTableStatus = TableStatus.Send;
 				return currentTable;
-			}
-			finally
-			{
-				currentTable = null;
-			}
 		}
 
 
@@ -93,9 +86,14 @@ namespace RestaurantApp5
 			}
 		}
 
+		public void RemoveTable()
+		{
+			currentTable = null;
+		}
+
 		#region
 
-		private TableRequest currentTable = null;
+		private TableRequest currentTable { get; set; } = null;
 		private Restaurant restaurant;
 		//public SemaphoreSlim ServerStatus;
 
