@@ -18,7 +18,7 @@ namespace RestaurantApp5
 		public Server(Restaurant restaurant)
 		{
 			this.restaurant = restaurant;
-			this.ServerStatus = new SemaphoreSlim(2);
+			//this.ServerStatus = new SemaphoreSlim(2);
 		}
 
 		/// <summary>
@@ -62,15 +62,10 @@ namespace RestaurantApp5
 		/// This method runs submit event
 		/// </summary>
 		/// <exception cref="Exception"></exception>
-		public TableRequest? GetCurrentTable()
+		public TableRequest GetCurrentTable()
 		{
-			if (currentTable != null)
-			{
-				ServerStatus.Wait();
-				currentTable.CurrentTableStatus = TableStatus.Send;
-				return currentTable;
-			}
-			return null;
+			currentTable.CurrentTableStatus = TableStatus.Send;
+			return currentTable;
 		}
 
 
@@ -99,7 +94,7 @@ namespace RestaurantApp5
 
 		private TableRequest currentTable { get; set; } = null;
 		private Restaurant restaurant;
-		public SemaphoreSlim ServerStatus;
+		//public SemaphoreSlim ServerStatus;
 
 		#endregion
 	}

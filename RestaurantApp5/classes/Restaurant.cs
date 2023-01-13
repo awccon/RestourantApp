@@ -27,7 +27,6 @@ namespace RestaurantApp5.classes
 		/// <returns>Current or new Table</returns>
 		public Task<TableRequest> GetAvailableTable()
 		{
-			
 			Message?.Invoke("Restaurant is checking available table....");
 			var availableTable = tableRequestList.FirstOrDefault(c => c.CurrentTableStatus == TableStatus.Default);
 			if (availableTable == null)
@@ -49,30 +48,18 @@ namespace RestaurantApp5.classes
 		/// </summary>
 		public async void SendTableToCook()
 		{
-			try
+			await semaphore.WaitAsync();
+			TableRequest? currentTable = server.GetCurrentTable();
+			var currentCook = cooks.FirstOrDefault(c => c.isAvailable == true);
+			if (currentCook != null)
 			{
-				server.ServerStatus.Release();
-
-				var task = semaphore.WaitAsync();
-				TableRequest? currentTable = server.GetCurrentTable();
-				var currentCook = cooks.FirstOrDefault(c => c.isAvailable == true);
-				if (currentCook != null)
-				{
-					var prepairedFood = await currentCook.Process(currentTable);
-					currentTable = null;
-					server.RemoveTable();
-					server.Serve(prepairedFood);
-					DiscardCurrentTable(prepairedFood);
-				}
-				semaphore.Release();
-				//task.Wait();
-				//if (task.IsCompleted)
-				//task.Dispose();
+				server.RemoveTable();
+				var prepairedFood = await currentCook.Process(currentTable);
+				currentTable = null;
+				server.Serve(prepairedFood);
+				DiscardCurrentTable(prepairedFood);
 			}
-			catch (Exception ex)
-			{
-				this.Message?.Invoke(ex.Message);
-			}
+			semaphore.Release();
 		}
 
 		private void DiscardCurrentTable(TableRequest currentTable)
@@ -86,6 +73,8 @@ namespace RestaurantApp5.classes
 		private Server server { get; set; }
 		public Action<string> Message { get; }
 		private SemaphoreSlim semaphore = new SemaphoreSlim(2);
+		//private SemaphoreSlim semaphore2 = new SemaphoreSlim(2);
+		private Task task { get; set; }
 		#endregion
 	}
 }
