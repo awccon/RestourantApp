@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
@@ -26,7 +27,7 @@ namespace RestaurantApp5.classes
 		/// <returns>Current or new Table</returns>
 		public Task<TableRequest> GetAvailableTable()
 		{
-			//server.ServerStatus.Wait();
+			
 			Message?.Invoke("Restaurant is checking available table....");
 			var availableTable = tableRequestList.FirstOrDefault(c => c.CurrentTableStatus == TableStatus.Default);
 			if (availableTable == null)
@@ -48,18 +49,30 @@ namespace RestaurantApp5.classes
 		/// </summary>
 		public async void SendTableToCook()
 		{
-			var currentTable = server.GetCurrentTable();
-			var currentCook = cooks.FirstOrDefault(c => c.isAvailable == true);
-			if (currentCook != null)
+			try
 			{
-				var prepairedFood = await currentCook.Process(currentTable);
-				currentTable = null;
-				server.RemoveTable();
-				server.Serve(prepairedFood);
-				DiscardCurrentTable(prepairedFood);
+				server.ServerStatus.Release();
+
+				var task = semaphore.WaitAsync();
+				TableRequest? currentTable = server.GetCurrentTable();
+				var currentCook = cooks.FirstOrDefault(c => c.isAvailable == true);
+				if (currentCook != null)
+				{
+					var prepairedFood = await currentCook.Process(currentTable);
+					currentTable = null;
+					server.RemoveTable();
+					server.Serve(prepairedFood);
+					DiscardCurrentTable(prepairedFood);
+				}
+				semaphore.Release();
+				//task.Wait();
+				//if (task.IsCompleted)
+				//task.Dispose();
 			}
-			else
-				this.Message("there are no available cooks, please wait untill it gets done");
+			catch (Exception ex)
+			{
+				this.Message?.Invoke(ex.Message);
+			}
 		}
 
 		private void DiscardCurrentTable(TableRequest currentTable)
@@ -72,6 +85,7 @@ namespace RestaurantApp5.classes
 		private List<Cook> cooks { get; set; } = new List<Cook>();
 		private Server server { get; set; }
 		public Action<string> Message { get; }
+		private SemaphoreSlim semaphore = new SemaphoreSlim(2);
 		#endregion
 	}
 }
