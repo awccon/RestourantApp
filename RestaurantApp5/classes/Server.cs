@@ -75,8 +75,7 @@ namespace RestaurantApp5
 		/// <returns></returns>
 		public void Serve(TableRequest tableList)
 		{
-			tableList.OrderBy(c => c.Name);
-			foreach (var item in tableList)
+			foreach (var item in tableList.OrderBy(c => c.Name))
 			{
 				var customerName = item.Name;
 				var chickenCount = item.Orders.Count(c => c is Chicken);
