@@ -9,80 +9,72 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace RestaurantApp5.classes
 {
-	internal class Restaurant
+	internal class Restaurant : IRestaurant
 	{
-		private List<TableRequest> tableRequestList = null;
-		private List<Cook> cooks = null;
-
-		public Restaurant()
+		public Restaurant(Action<string> printer)
 		{
-			tableRequestList = new List<TableRequest>() { new TableRequest(), new TableRequest() };
-			cooks = new List<Cook>() { new Cook(8), new Cook() };
+			this.server = new Server(this);
+			tableRequestList = new List<TableRequest>();
+			cooks.Add(new Cook(this, name: "Stive", yearOfExperience: 25));
+			cooks.Add(new Cook(this, name: "Glenn", yearOfExperience: 10));
+			Message = printer;
 		}
 
+		/// <summary>
+		/// Finds available table if it's available or it will create a new table
+		/// </summary>
+		/// <returns>Current or new Table</returns>
 		public Task<TableRequest> GetAvailableTable()
 		{
-			var availableTable = tableRequestList.FirstOrDefault(c => c.GetTableStatus == tableStatus.Default);
-			return Task.FromResult(availableTable ?? new TableRequest());
-		}
-
-
-		public async Task<List<TableRequest>> SendTableToCook(TableRequest table)
-		{
-			if (table == null)
-				throw new Exception("Please pass with tableRequest");
-
-			List<TableRequest> listOfTables = new List<TableRequest>();
-			SemaphoreSlim semaphoreSlim = new SemaphoreSlim(cooks.Count);
-			Task[] tasks = new Task[cooks.Count];
-			for (int i = 0; i < cooks.Count - 1; i++)
+			//server.ServerStatus.Wait();
+			Message?.Invoke("Restaurant is checking available table....");
+			var availableTable = tableRequestList.FirstOrDefault(c => c.CurrentTableStatus == TableStatus.Default);
+			if (availableTable == null)
 			{
-				tasks[i] = Task.Run(async () =>
-				{
-					listOfTables.Add(await cooks[i].Process(table));
-					Thread.Sleep(10000);
-					semaphoreSlim.Wait();
-				});
-				//tasks[i].Wait();
+				availableTable = new TableRequest(this.tableRequestList.Count + 1);
+				tableRequestList.Add(availableTable);
 			}
-			//semaphoreSlim.Release();
-			//Task.WaitAll(tasks);
-			return listOfTables;
-
-			//Task task1 = Task.Run(async () =>
-			//{
-			//	tables.Add(await cooks[0].Process(table));
-			//	semaphoreSlim.Wait();
-			//});
-
-			//Task task2 = Task.Run(async () =>
-			//{
-			//	tables.Add(await cooks[2].Process(table));
-			//	semaphoreSlim.Wait();
-			//});
-
-
-
-
-
-
-			//foreach (var cook in cooks)
-			//{
-			//	tables.Add(await cook.Process(table));
-			//	await Task.Delay(10000);
-			//	semaphoreSlim.Wait();
-			//}
-
-			//semaphoreSlim.Release();
-			//for (int i = 0; i < cooks.Count; i++)
-			//{
-			//	tasks.Add(cooks[i].Process(table));
-			//	semaphoreSlim.Wait();
-			//}
-			//semaphoreSlim.Release();
-			//Task.WaitAll(tasks[0], tasks[1]);
-			//semaphoreSlim.Dispose();
-			//return tables;
+			Message?.Invoke($"Available Table provided, table number is: {availableTable.ID}");
+			return Task.FromResult(availableTable);
 		}
+
+		public void SubmitNewOrder(int ChickenCount, int EggCount, string Name, listOfDrinks drink)
+		{
+			this.server.SubmitNewOrder(ChickenCount, EggCount, Name, drink);
+		}
+
+		/// <summary>
+		/// Gets table from server, checks available cook and invokes it
+		/// </summary>
+		public async void SendTableToCook()
+		{
+			if (tableFromServer != null)
+			{
+				var currentCook = cooks.FirstOrDefault(c => c.isAvailable == true);
+				if (currentCook != null)
+				{
+					var prepairedFood = await currentCook.Process(tableFromServer);
+					server.Serve(prepairedFood);
+					DiscardCurrentTable(prepairedFood);
+					tableFromServer = null;
+				}
+				else
+					this.Message("there are no available cooks, please wait untill it gets done");
+			}
+			else tableFromServer = server.GetCurrentTable();
+		}
+
+		private void DiscardCurrentTable(TableRequest currentTable)
+		{
+			this.tableRequestList.Remove(currentTable);
+		}
+
+		#region
+		private List<TableRequest> tableRequestList { get; set; } = null;
+		private List<Cook> cooks { get; set; } = new List<Cook>();
+		private Server server { get; set; }
+		public Action<string> Message { get; }
+		private TableRequest tableFromServer = null;
+		#endregion
 	}
 }

@@ -8,28 +8,11 @@ using System.Threading.Tasks;
 
 namespace RestaurantApp5
 {
-	public enum tableStatus
+	internal class TableRequest : IEnumerable<Customer>
 	{
-		Default,
-		Ordered,
-		Send,
-		Processing
-	}
-
-	internal class TableRequest : IEnumerable<Customer>, IDisposable
-	{
-		List<Customer> listOfCustomers = new List<Customer>();
-		private int tableLength = 8;
-		public tableStatus GetTableStatus = tableStatus.Default;
-		public readonly int ID;
-		public TableRequest()
+		public TableRequest(int id)
 		{
-			this.ID = new Random().Next(2);
-		}
-
-		public TableRequest(List<Customer> cutomer)
-		{
-			listOfCustomers = cutomer;
+			this.ID = id;
 		}
 
 		/// <summary>
@@ -52,7 +35,7 @@ namespace RestaurantApp5
 				listOfCustomers.Add(customer);
 			}
 			customer.Orders.Add(new T());
-			GetTableStatus = tableStatus.Ordered;
+			CurrentTableStatus = TableStatus.Ordered;
 		}
 
 		public List<IMenuItem> this[string Name]
@@ -100,20 +83,20 @@ namespace RestaurantApp5
 			return GetEnumerator();
 		}
 
-		//public void ClearCurrenttable()
-		//{
-		//	listOfCustomers.Clear();
-		//}
+		#region
+		private List<Customer> listOfCustomers { get; set; } = new List<Customer>();
+		private const int tableLength = 8;
+		public TableStatus CurrentTableStatus = TableStatus.Default;
+		public readonly int ID;
+		#endregion
+	}
 
-		public void Dispose()
-		{
-			listOfCustomers = new List<Customer>();
-		}
-
-		~TableRequest()
-		{
-			Dispose();
-		}
-
+	public enum TableStatus
+	{
+		Default,
+		Ordered,
+		Send,
+		Processing,
+		Processed
 	}
 }
