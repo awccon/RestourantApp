@@ -29,11 +29,9 @@ namespace RestaurantApp5.classes
 		public TableRequest GetNewTable()
 		{
 			server.ServerLock.Wait();
-			Message?.Invoke("Restaurant is checking available table....");
 			var availableTable = new TableRequest(this.tableRequestList.Count + 1);
 			tableRequestList.Add(availableTable);
-			Message?.Invoke($"Available Table provided, table number is: {availableTable.ID}");
-			return (availableTable);
+			return availableTable;
 		}
 
 		public void SubmitNewOrder(int ChickenCount, int EggCount, string Name, listOfDrinks drink)
@@ -52,7 +50,7 @@ namespace RestaurantApp5.classes
 				Cook availableCook = null;
 				server.ServerLock.Release();
 				server.RemoveTable();
-				await cookLock.WaitAsync();
+				cookLock.Wait();
 				availableCook = cooks.FirstOrDefault(c => c.isAvailable);
 				await availableCook.Process(currentTable).ContinueWith((t) =>
 				{

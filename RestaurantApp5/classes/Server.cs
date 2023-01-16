@@ -31,7 +31,7 @@ namespace RestaurantApp5
 			if (currentTable == null)
 			{
 				currentTable = restaurant.GetNewTable();
-				restaurant.Message?.Invoke("Server got a new table.");
+				restaurant.Message?.Invoke($"Server got new table, table number is: {currentTable.ID}");
 			}
 
 			for (int i = 0; i < ChickenCount; i++)
@@ -71,7 +71,8 @@ namespace RestaurantApp5
 		public void ServeTask(TableRequest tableList)
 		{
 			ServerLock.Wait();
-			restaurant.Message("Server serving the customers");
+			restaurant.Message("_______________");
+			restaurant.Message($"Server serving the table number: {tableList.ID}");
 			foreach (var item in tableList.OrderBy(c => c.Name))
 			{
 				var customerName = item.Name;
