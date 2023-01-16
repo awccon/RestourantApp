@@ -1,4 +1,5 @@
-﻿using RestaurantApp5;
+﻿using Microsoft.VisualBasic;
+using RestaurantApp5;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,8 +17,8 @@ namespace RestaurantApp5.classes
 		{
 			this.server = new Server(this);
 			tableRequestList = new List<TableRequest>();
-			cooks.Add(new Cook(this, name: "Stive", yearOfExperience: 25));
-			cooks.Add(new Cook(this, name: "Glenn", yearOfExperience: 10));
+			cooks.Add(new Cook(this, name: "Stive", yearOfExperience: 5));
+			cooks.Add(new Cook(this, name: "Glenn", yearOfExperience: 6));
 			Message = printer;
 		}
 
@@ -25,8 +26,9 @@ namespace RestaurantApp5.classes
 		/// Finds available table if it's available or it will create a new table
 		/// </summary>
 		/// <returns>Current or new Table</returns>
-		public Task<TableRequest> GetAvailableTable()
+		public Task<TableRequest> GetTableTask()
 		{
+			server.ServerLock.Wait();
 			Message?.Invoke("Restaurant is checking available table....");
 			var availableTable = tableRequestList.FirstOrDefault(c => c.CurrentTableStatus == TableStatus.Default);
 			if (availableTable == null)
@@ -40,7 +42,7 @@ namespace RestaurantApp5.classes
 
 		public void SubmitNewOrder(int ChickenCount, int EggCount, string Name, listOfDrinks drink)
 		{
-			this.server.SubmitNewOrder(ChickenCount, EggCount, Name, drink);
+			server.SubmitOrderTask(ChickenCount, EggCount, Name, drink);
 		}
 
 		/// <summary>
@@ -48,18 +50,33 @@ namespace RestaurantApp5.classes
 		/// </summary>
 		public async void SendTableToCook()
 		{
-			await semaphore.WaitAsync();
-			TableRequest? currentTable = server.GetCurrentTable();
-			var currentCook = cooks.FirstOrDefault(c => c.isAvailable == true);
-			if (currentCook != null)
+			Cook? availableCook = null;
+
+			currentTable = server.CurrentTable;
+			if (currentTable == null)
+				this.Message("Please submit new order");
+			else
 			{
+				server.ServerLock.Release();
 				server.RemoveTable();
-				var prepairedFood = await currentCook.Process(currentTable);
-				currentTable = null;
-				server.Serve(prepairedFood);
-				DiscardCurrentTable(prepairedFood);
 			}
-			semaphore.Release();
+
+			await CookLock.WaitAsync();
+			availableCook = cooks.FirstOrDefault(c => c.isAvailable == true);
+
+			if (availableCook == null)
+			{
+				this.Message("There are no available cook, your order was saved and once cook free it will be processed");
+			}
+			else
+			{
+				await availableCook.Process(currentTable).ContinueWith((t) =>
+				{
+					server.ServeTask(t.Result);
+					DiscardCurrentTable(t.Result);
+				});
+			}
+			CookLock.Release();
 		}
 
 		private void DiscardCurrentTable(TableRequest currentTable)
@@ -72,9 +89,13 @@ namespace RestaurantApp5.classes
 		private List<Cook> cooks { get; set; } = new List<Cook>();
 		private Server server { get; set; }
 		public Action<string> Message { get; }
-		private SemaphoreSlim semaphore = new SemaphoreSlim(2);
+		private SemaphoreSlim CookLock = new SemaphoreSlim(2);
+		private Task submitOrderTask;
 		//private SemaphoreSlim semaphore2 = new SemaphoreSlim(2);
-		private Task task { get; set; }
+		private Task submitTask;
+		private Task serveTask;
+		private TableRequest currentTable = null;
+
 		#endregion
 	}
 }

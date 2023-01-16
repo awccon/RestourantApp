@@ -30,11 +30,11 @@ namespace RestaurantApp5
 		{
 			if (tableRequests is null)
 				throw new Exception("Null tableRequests");
-			
+
 			lock (lockObj)
 			{
-				restaurant.Message?.Invoke($"Cook {this.Name} is processing {tableRequests.ID} tables foods");
 				isAvailable = false;
+				restaurant.Message?.Invoke($"Cook {this.Name} is processing {tableRequests.ID} tables foods");
 				tableRequests.CurrentTableStatus = TableStatus.Processing;
 
 				var CookableItems = tableRequests.Get<CookableFood>();
@@ -44,11 +44,11 @@ namespace RestaurantApp5
 					item.Obtain();
 					item.Cook();
 				}
-				tableRequests.CurrentTableStatus = TableStatus.Send;
+				tableRequests.CurrentTableStatus = TableStatus.Processed;
 			}
 			await Task.Delay(foodPrepairTime);
 			restaurant.Message?.Invoke($"Cook {this.Name} has been prepaired {tableRequests.ID} tables foods");
-			isAvailable = false;
+			isAvailable = true;
 			return tableRequests;
 		}
 

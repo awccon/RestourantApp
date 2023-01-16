@@ -58,7 +58,11 @@ namespace RestaurantApp5
 
 		public void Printer(string text)
 		{
-			listBox1.Items.Add(text);
+			listBox1.Invoke(
+				() =>
+				{
+					listBox1.Items.Add(text);
+				});
 		}
 	}
 }

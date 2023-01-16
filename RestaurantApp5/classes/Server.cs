@@ -13,12 +13,10 @@ namespace RestaurantApp5
 {
 	internal class Server
 	{
-
-
 		public Server(Restaurant restaurant)
 		{
 			this.restaurant = restaurant;
-			//this.ServerStatus = new SemaphoreSlim(2);
+			this.ServerLock = new SemaphoreSlim(1);
 		}
 
 		/// <summary>
@@ -28,11 +26,11 @@ namespace RestaurantApp5
 		/// <param name="EggCount"></param>
 		/// <param name="Name"></param>
 		/// <param name="drink"></param>
-		public async void SubmitNewOrder(int ChickenCount, int EggCount, string Name, listOfDrinks drink)
+		public void SubmitOrderTask(int ChickenCount, int EggCount, string Name, listOfDrinks drink)
 		{
 			if (currentTable == null)
 			{
-				currentTable = await restaurant.GetAvailableTable();
+				currentTable = restaurant.GetTableTask().GetAwaiter().GetResult();
 				restaurant.Message?.Invoke("Server got a table.");
 			}
 
@@ -59,22 +57,24 @@ namespace RestaurantApp5
 		}
 
 		/// <summary>
-		/// This method runs submit event
+		/// Method to get submitted table
 		/// </summary>
-		/// <exception cref="Exception"></exception>
-		public TableRequest GetCurrentTable()
+		public TableRequest CurrentTable
 		{
-			currentTable.CurrentTableStatus = TableStatus.Send;
-			return currentTable;
+			get
+			{
+				currentTable.CurrentTableStatus = TableStatus.Ordered;
+				return currentTable;
+			}
 		}
 
 
 		/// <summary>
-		/// Serves food to each customer
+		/// Serve each customer with alphabetic order
 		/// </summary>
-		/// <returns></returns>
-		public void Serve(TableRequest tableList)
+		public void ServeTask(TableRequest tableList)
 		{
+			ServerLock.Wait();
 			foreach (var item in tableList.OrderBy(c => c.Name))
 			{
 				var customerName = item.Name;
@@ -83,19 +83,21 @@ namespace RestaurantApp5
 				var drinkCount = item.Orders.Count(c => c is Drink);
 				restaurant.Message?.Invoke($"{customerName} ordered {drinkCount} drink, {eggCount} egg and {chickenCount} chicken");
 			}
+			ServerLock.Release();
 		}
 
+		/// <summary>
+		/// Removes table in server
+		/// </summary>
 		public void RemoveTable()
 		{
 			currentTable = null;
 		}
 
 		#region
-
 		private TableRequest currentTable { get; set; } = null;
 		private Restaurant restaurant;
-		//public SemaphoreSlim ServerStatus;
-
+		public SemaphoreSlim ServerLock;
 		#endregion
 	}
 }
