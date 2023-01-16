@@ -57,7 +57,7 @@ namespace RestaurantApp5
 		public bool isAvailable { get; private set; } = true;
 		private object lockObj;
 		private readonly string Name;
-		private int foodPrepairTime = 2000;
+		private int foodPrepairTime = 1500;
 		#endregion
 	}
 }

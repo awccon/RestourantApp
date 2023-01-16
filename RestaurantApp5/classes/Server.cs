@@ -30,8 +30,8 @@ namespace RestaurantApp5
 		{
 			if (currentTable == null)
 			{
-				currentTable = restaurant.GetTableTask().GetAwaiter().GetResult();
-				restaurant.Message?.Invoke("Server got a table.");
+				currentTable = restaurant.GetNewTable();
+				restaurant.Message?.Invoke("Server got a new table.");
 			}
 
 			for (int i = 0; i < ChickenCount; i++)
@@ -59,13 +59,9 @@ namespace RestaurantApp5
 		/// <summary>
 		/// Method to get submitted table
 		/// </summary>
-		public TableRequest CurrentTable
+		public TableRequest GetCurrentTable()
 		{
-			get
-			{
-				currentTable.CurrentTableStatus = TableStatus.Ordered;
-				return currentTable;
-			}
+			return currentTable;
 		}
 
 
@@ -75,6 +71,7 @@ namespace RestaurantApp5
 		public void ServeTask(TableRequest tableList)
 		{
 			ServerLock.Wait();
+			restaurant.Message("Server serving the customers");
 			foreach (var item in tableList.OrderBy(c => c.Name))
 			{
 				var customerName = item.Name;
@@ -83,6 +80,7 @@ namespace RestaurantApp5
 				var drinkCount = item.Orders.Count(c => c is Drink);
 				restaurant.Message?.Invoke($"{customerName} ordered {drinkCount} drink, {eggCount} egg and {chickenCount} chicken");
 			}
+			restaurant.Message("Server has been served the customers order");
 			ServerLock.Release();
 		}
 

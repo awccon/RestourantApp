@@ -4,6 +4,6 @@
 	{
 		public Action<string> Message { get; }
 		public void SubmitNewOrder(int ChickenCount, int EggCount, string Name, listOfDrinks drink);
-		public void SendTableToCook();
+		public void SendToCook();
 	}
 }

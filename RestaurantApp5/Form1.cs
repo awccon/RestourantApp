@@ -48,7 +48,7 @@ namespace RestaurantApp5
 		{
 			try
 			{
-				restaurant.SendTableToCook();
+				restaurant.SendToCook();
 			}
 			catch (Exception ex)
 			{
