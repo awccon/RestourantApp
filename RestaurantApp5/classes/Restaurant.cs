@@ -49,7 +49,7 @@ namespace RestaurantApp5.classes
 			currentTable = server.GetCurrentTable();
 			if (currentTable != null)
 			{
-				Cook? availableCook = null;
+				Cook availableCook = null;
 				server.ServerLock.Release();
 				server.RemoveTable();
 				await cookLock.WaitAsync();
@@ -70,12 +70,12 @@ namespace RestaurantApp5.classes
 		}
 
 		#region
-		private List<TableRequest> tableRequestList { get; set; } = null;
+		private List<TableRequest> tableRequestList { get; set; }
 		private List<Cook> cooks { get; set; } = new List<Cook>();
 		private Server server { get; set; }
 		public Action<string> Message { get; }
 		private SemaphoreSlim cookLock = new SemaphoreSlim(2);
-		private TableRequest currentTable = null;
+		private TableRequest currentTable;
 		#endregion
 	}
 }

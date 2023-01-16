@@ -28,15 +28,10 @@ namespace RestaurantApp5
 		/// <exception cref="Exception">throws an exception when parameter is null</exception>
 		public async Task<TableRequest> Process(TableRequest tableRequests)
 		{
-			if (tableRequests is null)
-				throw new Exception("Null tableRequests");
-
 			lock (lockObj)
 			{
 				isAvailable = false;
-				restaurant.Message?.Invoke($"Cook {this.Name} is processing {tableRequests.ID} tables foods");
-				tableRequests.CurrentTableStatus = TableStatus.Processing;
-
+				restaurant.Message?.Invoke($"Cook: {this.Name} got table number: {tableRequests.ID}");
 				var CookableItems = tableRequests.Get<CookableFood>();
 
 				foreach (CookableFood item in CookableItems)
@@ -44,10 +39,9 @@ namespace RestaurantApp5
 					item.Obtain();
 					item.Cook();
 				}
-				tableRequests.CurrentTableStatus = TableStatus.Processed;
 			}
 			await Task.Delay(foodPrepairTime);
-			restaurant.Message?.Invoke($"Cook {this.Name} has been prepaired {tableRequests.ID} tables foods");
+			restaurant.Message?.Invoke($"Cook: {this.Name} processed foods table number: {tableRequests.ID}");
 			isAvailable = true;
 			return tableRequests;
 		}

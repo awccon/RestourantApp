@@ -13,6 +13,7 @@ namespace RestaurantApp5
 		public TableRequest(int id)
 		{
 			this.ID = id;
+			listOfCustomers = new List<Customer>();
 		}
 
 		/// <summary>
@@ -35,7 +36,6 @@ namespace RestaurantApp5
 				listOfCustomers.Add(customer);
 			}
 			customer.Orders.Add(new T());
-			CurrentTableStatus = TableStatus.Ordered;
 		}
 
 		public List<IMenuItem> this[string Name]
@@ -84,19 +84,9 @@ namespace RestaurantApp5
 		}
 
 		#region
-		private List<Customer> listOfCustomers { get; set; } = new List<Customer>();
+		private List<Customer> listOfCustomers { get; set; }
 		private const int tableLength = 8;
-		public TableStatus CurrentTableStatus = TableStatus.Default;
 		public readonly int ID;
 		#endregion
-	}
-
-	public enum TableStatus
-	{
-		Default,
-		Ordered,
-		Send,
-		Processing,
-		Processed
 	}
 }
