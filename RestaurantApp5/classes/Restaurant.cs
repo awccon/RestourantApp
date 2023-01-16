@@ -50,7 +50,7 @@ namespace RestaurantApp5.classes
 				Cook availableCook = null;
 				server.ServerLock.Release();
 				server.RemoveTable();
-				cookLock.Wait();
+				cookLock.Wait(); // WaitAsync qilsam UI qotmadi
 				availableCook = cooks.FirstOrDefault(c => c.isAvailable);
 				await availableCook.Process(currentTable).ContinueWith((t) =>
 				{
