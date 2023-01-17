@@ -16,11 +16,12 @@ namespace RestaurantApp5.classes
 		public Restaurant(Action<string> printer)
 		{
 			this.server = new Server(restaurant: this);
-			tableRequestList = new List<TableRequest>();
 			cooks.Add(new Cook(restaurant: this, name: "Stive", yearOfExperience: 10));
 			cooks.Add(new Cook(restaurant: this, name: "Glenn", yearOfExperience: 8));
 			Message = printer;
 		}
+
+		public int TableCount { get; private set; }
 
 		/// <summary>
 		/// Creates and inserts new table
@@ -29,8 +30,8 @@ namespace RestaurantApp5.classes
 		public TableRequest GetNewTable()
 		{
 			server.ServerLock.Wait();
-			var availableTable = new TableRequest(this.tableRequestList.Count + 1);
-			tableRequestList.Add(availableTable);
+			TableCount++;
+			var availableTable = new TableRequest(TableCount);
 			return availableTable;
 		}
 
@@ -44,36 +45,28 @@ namespace RestaurantApp5.classes
 		/// </summary>
 		public async void SendToCook()
 		{
-			currentTable = server.GetCurrentTable();
+			var currentTable = server.GetCurrentTable();
 			if (currentTable != null)
 			{
 				Cook availableCook = null;
 				server.ServerLock.Release();
 				server.RemoveTable();
-				cookLock.Wait(); // WaitAsync qilsam UI qotmadi
+				await cookLock.WaitAsync();
 				availableCook = cooks.FirstOrDefault(c => c.isAvailable);
 				await availableCook.Process(currentTable).ContinueWith((t) =>
 				{
 					server.ServeTask(t.Result);
-					DiscardCurrentTable(t.Result);
 				});
 				cookLock.Release();
 			}
 			else this.Message("Please submit new order");
 		}
 
-		private void DiscardCurrentTable(TableRequest currentTable)
-		{
-			this.tableRequestList.Remove(currentTable);
-		}
-
 		#region
-		private List<TableRequest> tableRequestList { get; set; }
 		private List<Cook> cooks { get; set; } = new List<Cook>();
 		private Server server { get; set; }
 		public Action<string> Message { get; }
 		private SemaphoreSlim cookLock = new SemaphoreSlim(2);
-		private TableRequest currentTable;
 		#endregion
 	}
 }
