@@ -40,7 +40,7 @@ namespace RestaurantApp5
 					item.Cook();
 				}
 			}
-			await Task.Delay(20000);
+			await Task.Delay(foodPrepairTime);
 			restaurant.Message?.Invoke($"Cook: {this.Name} processed foods table number: {tableRequests.ID}");
 			isAvailable = true;
 			return tableRequests;
