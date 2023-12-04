@@ -43,7 +43,7 @@ namespace RestourantApp
                     lblEggQuality.Text = inspectResult;
                     
                  }
-                 else txtResult.Text = "Error: Order quantity is invalid, you entered zero or negative number of quantity. Please enter a correct number";
+                 else txtResult.Text = "Error: Order quantity is invalid, you've entered zero or negative number of quantity. Please enter a correct number";
            }
             else
             {
