@@ -8,7 +8,7 @@ namespace RestourantApp
             InitializeComponent();
         }
 
-        object newObj;
+        object newObj = null;
         Employee employee = new Employee();
 
         private void Form1_Load(object sender, EventArgs e)
